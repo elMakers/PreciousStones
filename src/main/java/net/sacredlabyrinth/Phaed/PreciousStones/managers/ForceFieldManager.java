@@ -127,7 +127,7 @@ public final class ForceFieldManager {
             }
         }
         
-        FieldPreCreationEvent fieldPreCreationEvent = new FieldPreCreationEvent(player, fs);
+        FieldPreCreationEvent fieldPreCreationEvent = new FieldPreCreationEvent(player, fs, fieldBlock);
         this.plugin.getServer().getPluginManager().callEvent((Event)fieldPreCreationEvent);
         if (fieldPreCreationEvent.isCancelled())
           return;
