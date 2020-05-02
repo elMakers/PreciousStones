@@ -1,5 +1,5 @@
 name: PreciousStones
-author: Phaed
+authors: [Phaed, NathanWolf, xtomyserrax]
 main: net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones
 version: ${project.version}
 api-version: 1.15
