@@ -304,7 +304,7 @@ public final class ForceFieldManager {
         // remove players inside field if it has PREVENT_ENTRY and they are not allowed
         
         if (field.hasFlag(FieldFlag.PREVENT_ENTRY)) {
-			for (Entity en : player.getNearbyEntities(field.getRadius()+5, field.getHeight()+5, field.getRadius()+5)) {
+			for (Entity en : fieldBlock.getWorld().getNearbyEntities(fieldBlock.getLocation(), field.getRadius(), field.getHeight(), field.getRadius())) {
 				if (en instanceof Player) {
 					Player near = (Player) en;
 					if (!this.plugin.getPermissionsManager().has(near, "preciousstones.bypass.entry") && field.containsPlayer(near.getName()) && FieldFlag.PREVENT_ENTRY.applies(field, near)) {
