@@ -1,8 +1,10 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.managers;
 
 import com.google.common.collect.Maps;
+
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.ResultsFilter;
+import net.sacredlabyrinth.Phaed.PreciousStones.api.events.FieldPreCreationEvent;
 import net.sacredlabyrinth.Phaed.PreciousStones.blocks.TargetBlock;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockTypeEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.CuboidEntry;
@@ -21,6 +23,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -123,6 +126,13 @@ public final class ForceFieldManager {
                 return;
             }
         }
+        
+        FieldPreCreationEvent fieldPreCreationEvent = new FieldPreCreationEvent(player, fs);
+        this.plugin.getServer().getPluginManager().callEvent((Event)fieldPreCreationEvent);
+        if (fieldPreCreationEvent.isCancelled())
+          return;
+
+        fs = fieldPreCreationEvent.getFieldSettings();
 
         String owner = fs.hasDefaultFlag(FieldFlag.NO_OWNER) ? "Server" : player.getName();
         boolean isChild = false;
