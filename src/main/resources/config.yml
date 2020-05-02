@@ -80,6 +80,7 @@ force-field-blocks:
   - trapped_chest
   - anvil
   - jukebox
+  - sweet_berry_bush
   - flower_pot
   - potted_acacia_sapling
   - potted_allium
@@ -102,6 +103,7 @@ force-field-blocks:
   - potted_red_tulip
   - potted_spruce_sapling
   - potted_white_tulip
+  - potted_wither_rose
   prevent-fire: true
   prevent-place: true
   prevent-destroy: true
