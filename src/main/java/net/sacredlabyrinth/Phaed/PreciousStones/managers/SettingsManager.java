@@ -542,6 +542,9 @@ public final class SettingsManager {
                 block.getType().equals(Material.PUMPKIN_STEM) ||
                 block.getType().equals(Material.BEETROOT) ||
                 block.getType().equals(Material.MELON_STEM) ||
+		block.getType().equals(Material.SWEET_BERRY_BUSH) ||
+                block.getType().equals(Material.BEE_NEST) ||
+                block.getType().equals(Material.BEEHIVE) ||
                 block.getType().equals(Material.TURTLE_EGG);
 
     }
