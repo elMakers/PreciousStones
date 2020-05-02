@@ -2,3 +2,6 @@
 target
 *.iml
 *.jar
+.classpath
+.project
+.settings
