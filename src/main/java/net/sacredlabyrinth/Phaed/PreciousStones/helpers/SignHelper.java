@@ -4,7 +4,6 @@ import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockTypeEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.FieldSign;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Attachable;
@@ -41,11 +40,15 @@ public class SignHelper {
      */
     public static Block getAttachedBlock(Block signBlock) {
         Object m = signBlock.getState().getData();
-        BlockFace face = BlockFace.DOWN;
+        BlockFace face = null;
 
         if (m instanceof Attachable) {
             face = ((Attachable) m).getAttachedFace();
         }
+        
+        if(face == null)
+        	face = BlockFace.DOWN;
+        
         return signBlock.getRelative(face);
     }
 
