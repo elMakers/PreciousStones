@@ -1234,7 +1234,7 @@ public class PSPlayerListener implements Listener {
 			plugin.getSnitchManager().recordSnitchBucketEmpty(player, block, "LAVA");
 		}
 
-		if (mat.equals(Material.WATER_BUCKET)) {
+		if (mat.equals(Material.WATER_BUCKET) || mat.equals(Material.COD_BUCKET) || mat.equals(Material.PUFFERFISH_BUCKET) || mat.equals(Material.SALMON_BUCKET) || mat.equals(Material.TROPICAL_FISH_BUCKET)) {
 			plugin.getSnitchManager().recordSnitchBucketEmpty(player, block, "WATER");
 		}
 
