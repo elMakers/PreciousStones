@@ -28,7 +28,6 @@ import java.util.*;
 /**
  * @author phaed
  */
-@SuppressWarnings("deprecation")
 public final class CommandManager implements CommandExecutor {
     private PreciousStones plugin;
 
