@@ -93,7 +93,7 @@ force-field-blocks:
   - potted_blue_orchid
   - potted_brown_mushroom
   - potted_cactus
-  - potter_cornflower
+  - potted_cornflower
   - potted_dandelion
   - potted_dark_oak_sapling
   - potted_dead_bush
@@ -137,7 +137,10 @@ force-field-blocks:
   prevent-flow: true
   prevent-spawn-egg: true
   ?prevent-teleport: true
+  ?prevent-use-doors: true
+  ?prevent-use-redstone: true
   protect-crops: true
+  ?no-projectile-throw: true
   ?allowed-can-break: true
   ?welcome-message: true
   ?farewell-message: true
