@@ -183,6 +183,22 @@ public class PSPlayerListener implements Listener {
 			}
 		}
 
+		// prevent teleporting to a field with an enderpearl if it has NO_PROJECTILE_THROW flag
+
+		if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+			field = plugin.getForceFieldManager().getEnabledSourceField(event.getTo(), FieldFlag.NO_PROJECTILE_THROW);
+
+			if (field != null) {
+				if (FieldFlag.NO_PROJECTILE_THROW.applies(field, player)) {
+					if (!plugin.getPermissionsManager().has(event.getPlayer(), "preciousstones.bypass.teleport")) {
+						event.setCancelled(true);
+						ChatHelper.send(player, "cannotTeleportInsideFieldEnderpearl");
+						return;
+					}
+				}
+			}
+		}
+
 		// undo a player's visualization if it exists
 
 		if (!Helper.isSameBlock(event.getFrom(), event.getTo())) {
@@ -232,7 +248,7 @@ public class PSPlayerListener implements Listener {
 					}
 
 					event.setTo(loc);
-					plugin.getCommunicationManager().warnEntry(player, field);
+					plugin.getCommunicationManager().warnEntry(player, futureField);
 					return;
 				}
 			}
@@ -533,6 +549,30 @@ public class PSPlayerListener implements Listener {
 				if (useField != null) {
 					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
 						if (!useField.getSettings().canUse(new BlockTypeEntry(block))) {
+							plugin.getCommunicationManager().warnUse(player, block, useField);
+							event.setCancelled(true);
+							return;
+						}
+					}
+				}
+
+				if (plugin.getSettingsManager().isDoor(block)) {
+					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_DOORS);
+
+					if (useField != null) {
+						if (FieldFlag.PREVENT_USE_DOORS.applies(useField, player)) {
+							plugin.getCommunicationManager().warnUse(player, block, useField);
+							event.setCancelled(true);
+							return;
+						}
+					}
+				}
+
+				if (plugin.getSettingsManager().isRedstone(block)) {
+					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_REDSTONE);
+
+					if (useField != null) {
+						if (FieldFlag.PREVENT_USE_REDSTONE.applies(useField, player)) {
 							plugin.getCommunicationManager().warnUse(player, block, useField);
 							event.setCancelled(true);
 							return;

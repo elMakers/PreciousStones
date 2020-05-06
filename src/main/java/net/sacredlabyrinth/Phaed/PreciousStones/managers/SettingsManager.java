@@ -542,11 +542,57 @@ public final class SettingsManager {
                 block.getType().equals(Material.PUMPKIN_STEM) ||
                 block.getType().equals(Material.BEETROOT) ||
                 block.getType().equals(Material.MELON_STEM) ||
-		block.getType().equals(Material.SWEET_BERRY_BUSH) ||
+                block.getType().equals(Material.SWEET_BERRY_BUSH) ||
                 block.getType().equals(Material.BEE_NEST) ||
                 block.getType().equals(Material.BEEHIVE) ||
                 block.getType().equals(Material.TURTLE_EGG);
 
+    }
+    
+    public boolean isDoor(Block block) {
+        return block.getType().equals(Material.ACACIA_DOOR) ||
+                block.getType().equals(Material.ACACIA_TRAPDOOR) ||
+                block.getType().equals(Material.ACACIA_FENCE_GATE) ||
+                block.getType().equals(Material.BIRCH_DOOR) ||
+                block.getType().equals(Material.BIRCH_TRAPDOOR) ||
+                block.getType().equals(Material.BIRCH_FENCE_GATE) ||
+                block.getType().equals(Material.DARK_OAK_DOOR) ||
+                block.getType().equals(Material.DARK_OAK_TRAPDOOR) ||
+                block.getType().equals(Material.DARK_OAK_FENCE_GATE) ||
+                block.getType().equals(Material.IRON_DOOR) ||
+                block.getType().equals(Material.IRON_TRAPDOOR) ||
+                block.getType().equals(Material.JUNGLE_DOOR) ||
+                block.getType().equals(Material.JUNGLE_TRAPDOOR) ||
+                block.getType().equals(Material.JUNGLE_FENCE_GATE) ||
+                block.getType().equals(Material.OAK_DOOR) ||
+                block.getType().equals(Material.OAK_TRAPDOOR) ||
+                block.getType().equals(Material.OAK_FENCE_GATE) ||
+                block.getType().equals(Material.SPRUCE_DOOR) ||
+                block.getType().equals(Material.SPRUCE_TRAPDOOR) ||
+                block.getType().equals(Material.SPRUCE_FENCE_GATE);
+    }
+    
+    public boolean isRedstone(Block block) {
+        return block.getType().equals(Material.COMPARATOR) ||
+        		block.getType().equals(Material.JUKEBOX) ||
+        		block.getType().equals(Material.LEVER) ||
+                block.getType().equals(Material.REPEATER) ||
+                block.getType().equals(Material.ACACIA_BUTTON) ||
+                block.getType().equals(Material.ACACIA_PRESSURE_PLATE) ||
+                block.getType().equals(Material.BIRCH_BUTTON) ||
+                block.getType().equals(Material.BIRCH_PRESSURE_PLATE) ||
+                block.getType().equals(Material.DARK_OAK_BUTTON) ||
+                block.getType().equals(Material.DARK_OAK_PRESSURE_PLATE) ||
+                block.getType().equals(Material.HEAVY_WEIGHTED_PRESSURE_PLATE) ||
+                block.getType().equals(Material.JUNGLE_BUTTON) ||
+                block.getType().equals(Material.JUNGLE_PRESSURE_PLATE) ||
+                block.getType().equals(Material.LIGHT_WEIGHTED_PRESSURE_PLATE) ||
+                block.getType().equals(Material.OAK_BUTTON) ||
+                block.getType().equals(Material.OAK_PRESSURE_PLATE) ||
+                block.getType().equals(Material.SPRUCE_BUTTON) ||
+                block.getType().equals(Material.SPRUCE_PRESSURE_PLATE) ||
+                block.getType().equals(Material.STONE_BUTTON) ||
+                block.getType().equals(Material.STONE_PRESSURE_PLATE);
     }
 
     /**
