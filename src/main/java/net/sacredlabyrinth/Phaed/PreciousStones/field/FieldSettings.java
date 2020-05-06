@@ -419,16 +419,7 @@ public class FieldSettings {
 
             if (value) {
                 loadFlags(getKey(flagStr));
-            } /*else if (flagStr.startsWith("?")) {
-                FieldFlag flag = FieldFlag.getByString(flagStr);
-
-                if (flag != null) {
-                    disabledFlags.add(flag);
-                    //defaultFlags.add(flag);
-                }
-                PreciousStones.debug("   %s: %s", flagStr, !value);
-                return !value;
-            }*/
+            }
 
             PreciousStones.debug("   %s: %s", flagStr, value);
             return value;
