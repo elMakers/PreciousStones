@@ -7,10 +7,13 @@ import net.sacredlabyrinth.Phaed.PreciousStones.field.Field;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldFlag;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldSettings;
 import net.sacredlabyrinth.Phaed.PreciousStones.helpers.Helper;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -593,6 +596,28 @@ public final class SettingsManager {
                 block.getType().equals(Material.SPRUCE_PRESSURE_PLATE) ||
                 block.getType().equals(Material.STONE_BUTTON) ||
                 block.getType().equals(Material.STONE_PRESSURE_PLATE);
+    }
+    
+    /**
+     * Get the new location a block moved by a piston will have
+     *
+     * @param type
+     * @return
+     */
+    public Location getMovedToLocation(Location loc, BlockFace to) {
+    	if(to == BlockFace.UP)
+    		return loc.add(0, 1, 0);
+    	else if(to == BlockFace.DOWN)
+    		return loc.add(0, -1, 0);
+    	else if(to == BlockFace.WEST)
+    		return loc.add(-1, 0, 0);
+    	else if(to == BlockFace.EAST)
+    		return loc.add(1, 0, 0);
+    	else if(to == BlockFace.NORTH)
+    		return loc.add(0, 0, -1);
+    	else if(to == BlockFace.SOUTH)
+    		return loc.add(0, 0, 1);
+		return loc;
     }
 
     /**
