@@ -1244,6 +1244,7 @@ public class PSBlockListener implements Listener {
         Field pistonField = plugin.getForceFieldManager().getEnabledSourceField(piston.getLocation(), FieldFlag.PREVENT_DESTROY);
 
         List<Block> blocks = event.getBlocks();
+        BlockFace face = event.getDirection();
 
         for (Block block : blocks) {
             if (SignHelper.cannotBreakFieldSign(block, null)) {
@@ -1264,7 +1265,7 @@ public class PSBlockListener implements Listener {
                 return;
             }
 
-            Field blockField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_DESTROY);
+            Field blockField = plugin.getForceFieldManager().getEnabledSourceField(plugin.getSettingsManager().getMovedToLocation(block.getLocation(), face), FieldFlag.PREVENT_DESTROY);
 
             if (pistonField != null && blockField != null) {
                 if (blockField.isAllowed(pistonField.getOwner())) {
