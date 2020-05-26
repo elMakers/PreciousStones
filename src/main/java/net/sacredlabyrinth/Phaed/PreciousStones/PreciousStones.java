@@ -171,6 +171,9 @@ public class PreciousStones extends JavaPlugin {
 
         registerEvents();
         registerCommands();
+        
+        @SuppressWarnings("unused")
+		Metrics metrics = new Metrics(this, 7619);
     }
 
     private void displayStatusInfo() {
