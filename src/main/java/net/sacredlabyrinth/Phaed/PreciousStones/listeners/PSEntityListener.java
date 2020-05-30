@@ -488,6 +488,25 @@ public class PSEntityListener implements Listener {
 				}
 			}
 		}
+		
+		if (event.getEntity().getType().equals(EntityType.MINECART_TNT) || event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
+			
+			Player player = Helper.getDamagingPlayer(event);
+
+			if ((player != null && !plugin.getPermissionsManager().has(player, "preciousstones.bypass.destroy")) || player == null) {
+				Field field = plugin.getForceFieldManager().getEnabledSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_DESTROY);
+
+				if (field != null) {
+					if (player != null) {
+						if (FieldFlag.PREVENT_DESTROY.applies(field, player)) {
+							event.setCancelled(true);
+						}
+					} else {
+						event.setCancelled(true);
+					}
+				}
+			}
+		}
 
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
@@ -662,6 +681,43 @@ public class PSEntityListener implements Listener {
 						if (FieldFlag.TELEPORT_ON_PVP.applies(field, attacker.getName())) {
 							sub.setCancelled(true);
 							plugin.getTeleportationManager().teleport(attacker, field, "teleportAnnouncePvp");
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param event
+	 */
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityChangeBlockEvent(EntityChangeBlockEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+
+		Entity entity = event.getEntity();
+
+		if (entity instanceof Arrow) {
+
+			Arrow arrow = (Arrow) entity;
+			if (!(arrow.getShooter() instanceof Player))
+				return;
+			
+			Player attacker = (Player) arrow.getShooter();
+			Block block = event.getBlock();
+
+			// -------------------------------------------------------------------------------- prevent changing blocks with arrows.
+			
+			Field field = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_DESTROY);
+
+			if (field != null) {
+				if (!field.getSettings().inDestroyBlacklist(block)) {
+					if (FieldFlag.PREVENT_DESTROY.applies(field, attacker)) {
+						if (!plugin.getPermissionsManager().has(attacker, "preciousstones.bypass.destroy")) {
+							event.setCancelled(true);
+							return;
 						}
 					}
 				}
