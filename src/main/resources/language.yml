@@ -288,7 +288,7 @@ sepStoredTranslocations: "{white}Stored Translocations {dark-gray}--------------
 sepCounts: "{white}{1.field-type} Counts {dark-gray} ----------------------------------------------------------------------------------------"
 sepConfiguredFields: "{white}Configured Fields {dark-gray}----------------------------------------------------------------------------------------"
 sepFieldCounts: "{1.player}'s Field Counts {dark-gray}  ----------------------------------------------------------------------------------------"
-sepFieldLocations: "{1.player}'s {world} Field Locations {dark-gray} ----------------------------------------------------------------------------------------"
+sepFieldLocations: "{1.player}'s {2.world} Field Locations {dark-gray} ----------------------------------------------------------------------------------------"
 sepMenu: "{1.plugin-name} {2.plugin-version} {dark-gray} ----------------------------------------------------------------------------------------"
 headerConfiguredFields: "{aqua}{1.field-type} {yellow}({white}{2.blockid}{yellow}){yellow}r:{white}{3.radius}"
 headerConfiguredFieldsHeight: "{yellow}h:{white}{1.height}"
