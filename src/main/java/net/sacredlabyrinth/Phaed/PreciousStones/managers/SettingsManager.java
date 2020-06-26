@@ -559,6 +559,9 @@ public final class SettingsManager {
                 block.getType().equals(Material.BIRCH_DOOR) ||
                 block.getType().equals(Material.BIRCH_TRAPDOOR) ||
                 block.getType().equals(Material.BIRCH_FENCE_GATE) ||
+                block.getType().equals(Material.CRIMSON_DOOR) ||
+                block.getType().equals(Material.CRIMSON_TRAPDOOR) ||
+                block.getType().equals(Material.CRIMSON_FENCE_GATE) ||
                 block.getType().equals(Material.DARK_OAK_DOOR) ||
                 block.getType().equals(Material.DARK_OAK_TRAPDOOR) ||
                 block.getType().equals(Material.DARK_OAK_FENCE_GATE) ||
@@ -572,7 +575,10 @@ public final class SettingsManager {
                 block.getType().equals(Material.OAK_FENCE_GATE) ||
                 block.getType().equals(Material.SPRUCE_DOOR) ||
                 block.getType().equals(Material.SPRUCE_TRAPDOOR) ||
-                block.getType().equals(Material.SPRUCE_FENCE_GATE);
+                block.getType().equals(Material.SPRUCE_FENCE_GATE) ||
+                block.getType().equals(Material.WARPED_DOOR) ||
+                block.getType().equals(Material.WARPED_TRAPDOOR) ||
+                block.getType().equals(Material.WARPED_FENCE_GATE);
     }
     
     public boolean isRedstone(Block block) {
@@ -584,6 +590,8 @@ public final class SettingsManager {
                 block.getType().equals(Material.ACACIA_PRESSURE_PLATE) ||
                 block.getType().equals(Material.BIRCH_BUTTON) ||
                 block.getType().equals(Material.BIRCH_PRESSURE_PLATE) ||
+                block.getType().equals(Material.CRIMSON_BUTTON) ||
+                block.getType().equals(Material.CRIMSON_PRESSURE_PLATE) ||
                 block.getType().equals(Material.DARK_OAK_BUTTON) ||
                 block.getType().equals(Material.DARK_OAK_PRESSURE_PLATE) ||
                 block.getType().equals(Material.HEAVY_WEIGHTED_PRESSURE_PLATE) ||
@@ -595,7 +603,9 @@ public final class SettingsManager {
                 block.getType().equals(Material.SPRUCE_BUTTON) ||
                 block.getType().equals(Material.SPRUCE_PRESSURE_PLATE) ||
                 block.getType().equals(Material.STONE_BUTTON) ||
-                block.getType().equals(Material.STONE_PRESSURE_PLATE);
+                block.getType().equals(Material.STONE_PRESSURE_PLATE) ||
+                block.getType().equals(Material.WARPED_BUTTON) ||
+                block.getType().equals(Material.WARPED_PRESSURE_PLATE);
     }
     
     /**
