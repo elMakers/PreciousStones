@@ -11,13 +11,10 @@ import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldSettings;
 
 /**
  * @author xtomyserrax
- *
- * This event will be called before a field is created so you can cancel it.
+ * <p>
+ * This event is fired right before a Field is created.
+ * <p>
  * getPlayer() will return the Player who placed the Field block.
- * getFieldSettings() will return the settings of the Field trying to be created.
- * setFieldSettings(FieldSettings) will let you change the actual Field Settings.
- * getBlock() will return you the Field block.
- * setCancelled(boolean) will let you cancel the event.
  */
 
 public class FieldPreCreationEvent extends PlayerEvent implements Cancellable {
@@ -38,14 +35,29 @@ public class FieldPreCreationEvent extends PlayerEvent implements Cancellable {
 		return handlers;
 	}
 
+	/**
+	 * Utility method to get the Settings of the Field that will be created.
+	 *
+	 * @return FieldSettings
+	 */
 	public FieldSettings getFieldSettings() {
 		return this.fieldSettings;
 	}
 
+	/**
+	 * Utility method to set the Settings of the Field that will be created.
+	 *
+	 * @return void
+	 */
 	public void setFieldSettings(FieldSettings fieldSettings) {
 		this.fieldSettings = fieldSettings;
 	}
 	
+	/**
+	 * Utility method to get the Block the Field will be.
+	 *
+	 * @return Block
+	 */
 	public Block getBlock() {
 		return this.block;
 	}
@@ -54,6 +66,11 @@ public class FieldPreCreationEvent extends PlayerEvent implements Cancellable {
 		return this.isCancelled;
 	}
 
+	/**
+	 * Cancel the creation of the Field.
+	 *
+	 * @return void
+	 */
 	public void setCancelled(boolean paramBoolean) {
 		this.isCancelled = paramBoolean;
 	}
