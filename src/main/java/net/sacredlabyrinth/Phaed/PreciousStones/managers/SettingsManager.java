@@ -132,8 +132,13 @@ public final class SettingsManager {
     private boolean offByDefault;
     private boolean useIdInSnitches;
     private int fenceMaxDepth;
-    private Material[] throughFields = new Material[]{Material.AIR, Material.OAK_SAPLING, Material.WATER, Material.WATER, Material.LAVA, Material.LAVA, Material.DEAD_BUSH, Material.DEAD_BUSH, Material.DANDELION, Material.POPPY, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.TORCH, Material.FIRE, Material.REDSTONE_WIRE, Material.WHEAT, Material.OAK_SIGN, Material.BIRCH_SIGN, Material.DARK_OAK_SIGN, Material.SPRUCE_SIGN, Material.ACACIA_SIGN, Material.LADDER, Material.RAIL, Material.LEVER, Material.AIR, Material.STONE_PRESSURE_PLATE, Material.OAK_PRESSURE_PLATE, Material.AIR, Material.REDSTONE_TORCH, Material.STONE_BUTTON, Material.SNOW, Material.SUGAR_CANE, Material.CAKE, Material.REPEATER, Material.REPEATER, Material.PUMPKIN_STEM, Material.MELON_STEM, Material.VINE, Material.TRIPWIRE_HOOK, Material.TRIPWIRE, Material.POTTED_CACTUS, Material.CARROTS, Material.POTATOES};
-    private Material[] naturalThroughFields = new Material[]{Material.AIR, Material.OAK_SAPLING, Material.WATER, Material.WATER, Material.LAVA, Material.LAVA, Material.DEAD_BUSH, Material.DEAD_BUSH, Material.DANDELION, Material.POPPY, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.FIRE, Material.WHEAT, Material.SNOW, Material.SUGAR_CANE, Material.PUMPKIN_STEM, Material.MELON_STEM, Material.VINE, Material.CARROTS, Material.POTATOES};
+    private Material[] throughFields = new Material[]{Material.AIR, Material.OAK_SAPLING, Material.WATER, Material.LAVA, 
+    		Material.DEAD_BUSH, Material.DANDELION, Material.POPPY, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.TORCH, Material.SOUL_TORCH, Material.REDSTONE_TORCH, 
+    		Material.FIRE, Material.REDSTONE_WIRE, Material.WHEAT, Material.LADDER, Material.RAIL, Material.LEVER, Material.REPEATER, Material.PUMPKIN_STEM, 
+    		Material.MELON_STEM, Material.VINE, Material.TRIPWIRE_HOOK, Material.TRIPWIRE, Material.POTTED_CACTUS, Material.CARROTS, Material.POTATOES};
+    private Material[] naturalThroughFields = new Material[]{Material.AIR, Material.OAK_SAPLING, Material.WATER, Material.LAVA, Material.DEAD_BUSH, 
+    		Material.DANDELION, Material.POPPY, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.FIRE, Material.WHEAT, Material.SNOW, Material.SUGAR_CANE, 
+    		Material.PUMPKIN_STEM, Material.MELON_STEM, Material.VINE, Material.CARROTS, Material.POTATOES};
     private HashSet<Material> throughFieldsSet = new HashSet<>();
     private HashSet<Material> naturalThroughFieldSet = new HashSet<>();
     private int linesPerPage;
@@ -426,7 +431,6 @@ public final class SettingsManager {
     /**
      * @param maps
      */
-    @SuppressWarnings("unchecked")
     public void addForceFieldStones(List<LinkedHashMap<String, Object>> maps) {
         if (maps == null) {
             return;
@@ -523,16 +527,16 @@ public final class SettingsManager {
     }
 
     public boolean isHarmfulPotion(PotionEffectType pot) {
-        return pot.equals(PotionEffectType.SLOW) ||
+        return pot.equals(PotionEffectType.BLINDNESS) ||
+        		pot.equals(PotionEffectType.CONFUSION) ||
+        		pot.equals(PotionEffectType.HARM) ||
+        		pot.equals(PotionEffectType.HUNGER) ||
+        		pot.equals(PotionEffectType.INCREASE_DAMAGE) ||
+        		pot.equals(PotionEffectType.POISON) ||
+        		pot.equals(PotionEffectType.SLOW) ||
                 pot.equals(PotionEffectType.SLOW_DIGGING) ||
-                pot.equals(PotionEffectType.WEAKNESS) ||
-                pot.equals(PotionEffectType.BLINDNESS) ||
-                pot.equals(PotionEffectType.CONFUSION) ||
-                pot.equals(PotionEffectType.HARM) ||
-                pot.equals(PotionEffectType.POISON) ||
-                pot.equals(PotionEffectType.HUNGER) ||
                 pot.equals(PotionEffectType.UNLUCK) ||
-                pot.equals(PotionEffectType.INCREASE_DAMAGE);
+                pot.equals(PotionEffectType.WEAKNESS);
 
     }
 
@@ -552,33 +556,10 @@ public final class SettingsManager {
 
     }
     
-    public boolean isDoor(Block block) {
-        return block.getType().equals(Material.ACACIA_DOOR) ||
-                block.getType().equals(Material.ACACIA_TRAPDOOR) ||
-                block.getType().equals(Material.ACACIA_FENCE_GATE) ||
-                block.getType().equals(Material.BIRCH_DOOR) ||
-                block.getType().equals(Material.BIRCH_TRAPDOOR) ||
-                block.getType().equals(Material.BIRCH_FENCE_GATE) ||
-                block.getType().equals(Material.CRIMSON_DOOR) ||
-                block.getType().equals(Material.CRIMSON_TRAPDOOR) ||
-                block.getType().equals(Material.CRIMSON_FENCE_GATE) ||
-                block.getType().equals(Material.DARK_OAK_DOOR) ||
-                block.getType().equals(Material.DARK_OAK_TRAPDOOR) ||
-                block.getType().equals(Material.DARK_OAK_FENCE_GATE) ||
-                block.getType().equals(Material.IRON_DOOR) ||
-                block.getType().equals(Material.IRON_TRAPDOOR) ||
-                block.getType().equals(Material.JUNGLE_DOOR) ||
-                block.getType().equals(Material.JUNGLE_TRAPDOOR) ||
-                block.getType().equals(Material.JUNGLE_FENCE_GATE) ||
-                block.getType().equals(Material.OAK_DOOR) ||
-                block.getType().equals(Material.OAK_TRAPDOOR) ||
-                block.getType().equals(Material.OAK_FENCE_GATE) ||
-                block.getType().equals(Material.SPRUCE_DOOR) ||
-                block.getType().equals(Material.SPRUCE_TRAPDOOR) ||
-                block.getType().equals(Material.SPRUCE_FENCE_GATE) ||
-                block.getType().equals(Material.WARPED_DOOR) ||
-                block.getType().equals(Material.WARPED_TRAPDOOR) ||
-                block.getType().equals(Material.WARPED_FENCE_GATE);
+    public boolean isAnyTypeOfDoor(Material type) {
+        return isADoor(type) ||
+        		isATrapdoor(type) ||
+        		isAFenceGate(type);
     }
     
     public boolean isRedstone(Block block) {
@@ -586,26 +567,99 @@ public final class SettingsManager {
         		block.getType().equals(Material.JUKEBOX) ||
         		block.getType().equals(Material.LEVER) ||
                 block.getType().equals(Material.REPEATER) ||
-                block.getType().equals(Material.ACACIA_BUTTON) ||
-                block.getType().equals(Material.ACACIA_PRESSURE_PLATE) ||
-                block.getType().equals(Material.BIRCH_BUTTON) ||
-                block.getType().equals(Material.BIRCH_PRESSURE_PLATE) ||
-                block.getType().equals(Material.CRIMSON_BUTTON) ||
-                block.getType().equals(Material.CRIMSON_PRESSURE_PLATE) ||
-                block.getType().equals(Material.DARK_OAK_BUTTON) ||
-                block.getType().equals(Material.DARK_OAK_PRESSURE_PLATE) ||
-                block.getType().equals(Material.HEAVY_WEIGHTED_PRESSURE_PLATE) ||
-                block.getType().equals(Material.JUNGLE_BUTTON) ||
-                block.getType().equals(Material.JUNGLE_PRESSURE_PLATE) ||
-                block.getType().equals(Material.LIGHT_WEIGHTED_PRESSURE_PLATE) ||
-                block.getType().equals(Material.OAK_BUTTON) ||
-                block.getType().equals(Material.OAK_PRESSURE_PLATE) ||
-                block.getType().equals(Material.SPRUCE_BUTTON) ||
-                block.getType().equals(Material.SPRUCE_PRESSURE_PLATE) ||
-                block.getType().equals(Material.STONE_BUTTON) ||
-                block.getType().equals(Material.STONE_PRESSURE_PLATE) ||
-                block.getType().equals(Material.WARPED_BUTTON) ||
-                block.getType().equals(Material.WARPED_PRESSURE_PLATE);
+                isAButton(block.getType()) ||
+                isAPressurePlate(block.getType());
+    }
+    
+    public boolean isADoor(Material type) {
+    	return type == Material.ACACIA_DOOR || 
+    			type == Material.BIRCH_DOOR ||
+    		    type == Material.CRIMSON_DOOR ||
+    			type == Material.DARK_OAK_DOOR ||
+    			type == Material.JUNGLE_DOOR ||
+    			type == Material.OAK_DOOR ||
+    	    	type == Material.SPRUCE_DOOR ||
+    	    	type == Material.IRON_DOOR ||
+    	    	type == Material.WARPED_DOOR;
+    }
+    
+    public boolean isATrapdoor(Material type) {
+    	return type == Material.ACACIA_TRAPDOOR || 
+    			type == Material.BIRCH_TRAPDOOR ||
+    		    type == Material.CRIMSON_TRAPDOOR ||
+    			type == Material.DARK_OAK_TRAPDOOR ||
+    			type == Material.JUNGLE_TRAPDOOR ||
+    			type == Material.OAK_TRAPDOOR ||
+    	    	type == Material.SPRUCE_TRAPDOOR ||
+    	    	type == Material.IRON_TRAPDOOR ||
+    	    	type == Material.WARPED_TRAPDOOR;
+    }
+    
+    public boolean isAFenceGate(Material type) {
+    	return type == Material.ACACIA_FENCE_GATE || 
+    			type == Material.BIRCH_FENCE_GATE ||
+    		    type == Material.CRIMSON_FENCE_GATE ||
+    			type == Material.DARK_OAK_FENCE_GATE ||
+    			type == Material.JUNGLE_FENCE_GATE ||
+    			type == Material.OAK_FENCE_GATE ||
+    	    	type == Material.SPRUCE_FENCE_GATE ||
+    	    	type == Material.WARPED_FENCE_GATE;
+    }
+    
+    public boolean isAPressurePlate(Material type) {
+    	return type == Material.ACACIA_PRESSURE_PLATE || 
+    			type == Material.BIRCH_PRESSURE_PLATE ||
+    		    type == Material.CRIMSON_PRESSURE_PLATE ||
+    			type == Material.DARK_OAK_PRESSURE_PLATE ||
+    			type == Material.HEAVY_WEIGHTED_PRESSURE_PLATE ||
+    			type == Material.JUNGLE_PRESSURE_PLATE ||
+    	    	type == Material.LIGHT_WEIGHTED_PRESSURE_PLATE ||
+    	    	type == Material.OAK_PRESSURE_PLATE ||
+    	    	type == Material.SPRUCE_PRESSURE_PLATE ||
+    	    	type == Material.STONE_PRESSURE_PLATE ||
+    	        type == Material.WARPED_PRESSURE_PLATE;
+    }
+    
+    public boolean isAButton(Material type) {
+    	return type == Material.ACACIA_BUTTON || 
+    			type == Material.BIRCH_BUTTON ||
+    		    type == Material.CRIMSON_BUTTON ||
+    			type == Material.DARK_OAK_BUTTON ||
+    			type == Material.JUNGLE_BUTTON ||
+    			type == Material.OAK_BUTTON ||
+    	    	type == Material.SPRUCE_BUTTON ||
+    	    	type == Material.STONE_BUTTON ||
+    	    	type == Material.WARPED_BUTTON;
+    }
+    
+    public boolean isASign(Material type) {
+    	return type == Material.ACACIA_SIGN || 
+    			type == Material.BIRCH_SIGN ||
+    		    type == Material.CRIMSON_SIGN ||
+    			type == Material.DARK_OAK_SIGN ||
+    			type == Material.JUNGLE_SIGN ||
+    			type == Material.OAK_SIGN ||
+    	    	type == Material.SPRUCE_SIGN ||
+    	    	type == Material.WARPED_SIGN;
+    }
+    
+    public boolean isABed(Material type) {
+    	return type == Material.BLACK_BED || 
+        		type == Material.BLUE_BED ||
+                type == Material.BROWN_BED ||
+                type == Material.CYAN_BED ||
+                type == Material.GRAY_BED ||
+                type == Material.GREEN_BED ||
+                type == Material.LIGHT_BLUE_BED ||
+                type == Material.LIGHT_GRAY_BED ||
+                type == Material.LIME_BED ||
+                type == Material.MAGENTA_BED ||
+                type == Material.ORANGE_BED ||
+                type == Material.PINK_BED ||
+                type == Material.PURPLE_BED ||
+                type == Material.RED_BED ||
+                type == Material.WHITE_BED ||
+                type == Material.YELLOW_BED;
     }
     
     /**
@@ -637,7 +691,42 @@ public final class SettingsManager {
      * @return
      */
     public boolean isDependentBlock(Material type) {
-        return type == Material.RED_BED || type == Material.POWERED_RAIL || type == Material.DETECTOR_RAIL || type == Material.COBWEB || type == Material.DEAD_BUSH || type == Material.DANDELION || type == Material.POPPY || type == Material.BROWN_MUSHROOM || type == Material.RED_MUSHROOM || type == Material.TORCH || type == Material.REDSTONE_WIRE || Tag.SIGNS.isTagged(type) || type == Material.OAK_DOOR || type == Material.LADDER || type == Material.RAIL || type == Material.LEVER || type == Material.STONE_PRESSURE_PLATE || type == Material.IRON_DOOR || type == Material.OAK_PRESSURE_PLATE || type == Material.AIR || type == Material.REDSTONE_TORCH || type == Material.STONE_BUTTON || type == Material.SNOW || type == Material.OAK_FENCE || type == Material.OAK_TRAPDOOR || type == Material.BROWN_MUSHROOM_BLOCK || type == Material.RED_MUSHROOM_BLOCK || type == Material.IRON_BARS || type == Material.GLASS_PANE || type == Material.PUMPKIN_STEM || type == Material.MELON_STEM || type == Material.VINE || type == Material.OAK_FENCE_GATE || type == Material.LILY_PAD || type == Material.NETHER_BRICK_FENCE || type == Material.NETHER_WART || type == Material.END_PORTAL || type == Material.COCOA || type == Material.TRIPWIRE_HOOK || type == Material.TRIPWIRE;
+        return isABed(type) ||
+        		type == Material.POWERED_RAIL || 
+        		type == Material.DETECTOR_RAIL || 
+        		type == Material.COBWEB || 
+        		type == Material.DEAD_BUSH || 
+        		type == Material.DANDELION || 
+        		type == Material.POPPY || 
+        		type == Material.BROWN_MUSHROOM || 
+        		type == Material.RED_MUSHROOM || 
+        		type == Material.TORCH || 
+                type == Material.REDSTONE_TORCH || 
+                type == Material.SOUL_TORCH || 
+        		type == Material.REDSTONE_WIRE || 
+        		Tag.SIGNS.isTagged(type) || 
+        		type == Material.LADDER || 
+        		type == Material.RAIL || 
+        		type == Material.LEVER || 
+        		isAPressurePlate(type) || 
+        		isAnyTypeOfDoor(type) || 
+        		type == Material.AIR || 
+        		isAButton(type) || 
+        		type == Material.SNOW || 
+        		type == Material.BROWN_MUSHROOM_BLOCK || 
+        		type == Material.RED_MUSHROOM_BLOCK || 
+        		type == Material.IRON_BARS || 
+        		type == Material.GLASS_PANE || 
+        		type == Material.PUMPKIN_STEM || 
+        		type == Material.MELON_STEM || 
+        		type == Material.VINE || 
+        		type == Material.LILY_PAD || 
+        		type == Material.NETHER_BRICK_FENCE || 
+        		type == Material.NETHER_WART || 
+        		type == Material.END_PORTAL || 
+        		type == Material.COCOA || 
+        		type == Material.TRIPWIRE_HOOK || 
+        		type == Material.TRIPWIRE;
 
     }
 
@@ -707,7 +796,10 @@ public final class SettingsManager {
      * @return
      */
     public boolean isThroughType(Material type) {
-        return throughFieldsSet.contains(type);
+        return isAPressurePlate(type) || 
+        		isAButton(type) || 
+        		isASign(type) || 
+        		throughFieldsSet.contains(type);
     }
 
     /**

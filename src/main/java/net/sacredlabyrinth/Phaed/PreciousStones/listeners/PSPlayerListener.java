@@ -556,7 +556,7 @@ public class PSPlayerListener implements Listener {
 					}
 				}
 
-				if (plugin.getSettingsManager().isDoor(block)) {
+				if (plugin.getSettingsManager().isAnyTypeOfDoor(block.getType())) {
 					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_DOORS);
 
 					if (useField != null) {
