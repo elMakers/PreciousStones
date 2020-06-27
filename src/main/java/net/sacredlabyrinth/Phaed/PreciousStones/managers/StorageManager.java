@@ -799,7 +799,6 @@ public class StorageManager {
         return out.values();
     }
 
-    @SuppressWarnings("deprecation")
     public void migrate(String oldUsername, String newUsername) {
         plugin.getForceFieldManager().migrateUsername(oldUsername, newUsername);
         plugin.getUnbreakableManager().migrateUsername(oldUsername, newUsername);

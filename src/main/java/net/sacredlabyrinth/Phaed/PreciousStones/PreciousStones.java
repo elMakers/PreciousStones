@@ -11,6 +11,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -164,7 +166,8 @@ public class PreciousStones extends JavaPlugin {
         }
 
         if (permissionsManager.hasLWC()) {
-            LWCListener lwcListener = new LWCListener();
+            @SuppressWarnings("unused")
+			LWCListener lwcListener = new LWCListener();
         }
 
         api = new Api();
@@ -172,8 +175,13 @@ public class PreciousStones extends JavaPlugin {
         registerEvents();
         registerCommands();
         
-        @SuppressWarnings("unused")
 		Metrics metrics = new Metrics(this, 7619);
+		metrics.addCustomChart(new Metrics.SimplePie("server_language", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Locale.getDefault().toString();
+			}
+		}));
     }
 
     private void displayStatusInfo() {
