@@ -1524,8 +1524,9 @@ public final class CommandManager implements CommandExecutor {
                             }
 
                             ChatHelper.send(sender, "notPointingAtPstone");
-                            return true;
-                        }
+                        } else
+                        	ChatHelper.send(sender, "notEnoughArgumentsMenu38");
+                        return true;
                     } else if (cmd.equals(ChatHelper.format("commandChangeowner")) && plugin.getPermissionsManager().has(player, "preciousstones.benefit.change-owner") && hasplayer) {
                         if (args.length == 1) {
                             String owner = args[0];
@@ -1557,9 +1558,9 @@ public final class CommandManager implements CommandExecutor {
                             } else {
                                 ChatHelper.send(sender, "notPointingAtPstone");
                             }
-
-                            return true;
-                        }
+                        } else
+                        	ChatHelper.send(sender, "notEnoughArgumentsMenu12");
+                        return true;
                     } else if (cmd.equals(ChatHelper.format("commandList")) && plugin.getPermissionsManager().has(player, "preciousstones.admin.list") && hasplayer) {
                         if (args.length == 1) {
                             if (Helper.isInteger(args[0])) {
@@ -1838,9 +1839,10 @@ public final class CommandManager implements CommandExecutor {
 
                             PreciousStones.getInstance().getStorageManager().migrate(oldUsername, newUsername);
                             plugin.getStorageManager().offerPlayer(newUsername);
-                            ChatHelper.send(sender, "migrateDone");
-                            return true;
-                        }
+                            ChatHelper.send(sender, "migrateDone", oldUsername, newUsername);
+                        } else
+                        	ChatHelper.send(sender, "notEnoughArgumentsMenu69");
+                        return true;
                     } else if (cmd.equals(ChatHelper.format("commandBypass")) && plugin.getPermissionsManager().has(player, "preciousstones.bypass.toggle")) {
                         PlayerEntry entry = plugin.getPlayerManager().getPlayerEntry(player);
 
@@ -1963,7 +1965,8 @@ public final class CommandManager implements CommandExecutor {
                             } else {
                                 ChatHelper.send(sender, "playerNotFound", playerName);
                             }
-                        }
+                        } else
+                        	ChatHelper.send(sender, "notEnoughArgumentsMenu70");
                         return true;
                     } else if (cmd.equals(ChatHelper.format("commandPlace")) && plugin.getPermissionsManager().has(player, "preciousstones.admin.place")) {
                         if (args.length >= 6) {
@@ -2018,7 +2021,8 @@ public final class CommandManager implements CommandExecutor {
                             } else {
                                 ChatHelper.send(sender, "fieldNotFound", fieldName);
                             }
-                        }
+                        } else
+                        	ChatHelper.send(sender, "notEnoughArgumentsMenu71");
                         return true;
                     }
 
