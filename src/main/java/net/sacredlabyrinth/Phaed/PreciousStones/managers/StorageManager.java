@@ -810,8 +810,8 @@ public class StorageManager {
         updateQuery = "UPDATE `pstone_translocations` SET player_name = '" + newUsername + "' WHERE player_name = '" + oldUsername + "';";
         core.execute(updateQuery);
 
-        updateQuery = "UPDATE `pstone_players` SET player_name = '" + newUsername + "' WHERE player_name = '" + oldUsername + "';";
-        core.execute(updateQuery);
+        //updateQuery = "UPDATE `pstone_players` SET player_name = '" + newUsername + "' WHERE player_name = '" + oldUsername + "';";
+        //core.execute(updateQuery);
 
         PreciousStones.log("[Username Changed] From: " + oldUsername + " To: " + newUsername);
 
