@@ -23,6 +23,7 @@ force-field-blocks:
   prevent-spawn-egg: true
   protect-crops: true
   protect-inventories: true
+  ?prevent-entity-interact: true
   ?allowed-can-break: true
   ?welcome-message: true
   ?farewell-message: true
@@ -54,34 +55,6 @@ force-field-blocks:
   plot: true
   no-conflict: true
   prevent-use:
-  - acacia_door
-  - birch_door
-  - crimson_door
-  - dark_oak_door
-  - iron_door
-  - jungle_door
-  - oak_door
-  - spruce_door
-  - warped_door
-  - acacia_fence_gate
-  - birch_fence_gate
-  - crimson_fence_gate
-  - dark_oak_fence_gate
-  - jungle_fence_gate
-  - oak_fence_gate
-  - spruce_fence_gate
-  - warped_fence_gate
-  - acacia_trapdoor
-  - birch_trapdoor
-  - crimson_trapdoor
-  - dark_oak_trapdoor
-  - iron_trapdoor
-  - jungle_trapdoor
-  - oak_trapdoor
-  - spruce_trapdoor
-  - warped_trapdoor
-  - repeater
-  - comparator
   - chest
   - trapped_chest
   - anvil
@@ -136,6 +109,30 @@ force-field-blocks:
   - red_bed
   - white_bed
   - yellow_bed
+  - lodestone
+  - enchanting_table
+  - campfire
+  - name_tag
+  - end_crystal
+  - respawn_anchor
+  - bell
+  - lead
+  - black_dye
+  - blue_dye
+  - brown_dye
+  - cyan_dye
+  - gray_dye
+  - green_dye
+  - light_blue_dye
+  - light_gray_dye
+  - lime_dye
+  - magenta_dye
+  - orange_dye
+  - pink_dye
+  - purple_dye
+  - red_dye
+  - white_dye
+  - yellow_dye
   prevent-fire: true
   prevent-place: true
   prevent-destroy: true
@@ -146,6 +143,7 @@ force-field-blocks:
   protect-inventories: true
   prevent-flow: true
   prevent-spawn-egg: true
+  ?prevent-entity-interact: true
   ?prevent-teleport: true
   ?prevent-use-doors: true
   ?prevent-use-redstone: true
