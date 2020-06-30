@@ -32,7 +32,7 @@ public class LimitManager {
     public boolean reachedLimit(Player player, FieldSettings fs) {
         List<Integer> limits = fs.getLimits();
 
-        if (limits.isEmpty()) {
+        if (limits.isEmpty() && plugin.getSettingsManager().isUsePermissionBasedLimits) {
             return false;
         }
 
@@ -76,28 +76,50 @@ public class LimitManager {
      * @return the limit, -1 if no limit
      */
     public int getLimit(Player player, FieldSettings fs) {
-        List<Integer> limits = fs.getLimits();
+        //Check if config flag usePermissionBasedLimits set to false
+        if (!plugin.getSettingsManager().isUsePermissionBasedLimits) {
+            List<Integer> limits = fs.getLimits();
 
-        if (limits.isEmpty()) {
-            return -1;
-        }
-
-        List<Integer> playersLimits = new ArrayList<>();
-
-        // get all the counts for all limits the player has
-
-        for (int i = limits.size() - 1; i >= 0; i--) {
-            if (plugin.getPermissionsManager().has(player, "preciousstones.limit" + (i + 1))) {
-                playersLimits.add(limits.get(i));
+            if (limits.isEmpty()) {
+                return -1;
             }
+
+            List<Integer> playersLimits = new ArrayList<>();
+
+            // get all the counts for all limits the player has
+
+            for (int i = limits.size() - 1; i >= 0; i--) {
+                if (plugin.getPermissionsManager().has(player, "preciousstones.limit" + (i + 1))) {
+                    playersLimits.add(limits.get(i));
+                }
+            }
+
+            // return the highest one
+
+            if (!playersLimits.isEmpty()) {
+                return Collections.max(playersLimits);
+            }
+
+            return -1;
+
+        } else {
+
+            //If config flag usePermissionBasedLimits set to true!
+            /**
+             * Player must have preciousstones.limit.field_title
+             * where field_title is the name of a configured field, in lowercase, with spaces replaced with underscores.
+             * if not, then there will be no limit
+             */
+            String fieldTitle = fs.getTitle().replaceAll(" ", "_").toLowerCase();
+            if (plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle)) {
+                for(int i = fs.getMaxPerPlayer; i >= 0; i--;) {
+                    if(plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle + "." + Integer.toString(i))) {
+                        return i;
+                    }
+                }
+
+            }else return -1;
+
         }
-
-        // return the highest one
-
-        if (!playersLimits.isEmpty()) {
-            return Collections.max(playersLimits);
-        }
-
-        return -1;
     }
 }

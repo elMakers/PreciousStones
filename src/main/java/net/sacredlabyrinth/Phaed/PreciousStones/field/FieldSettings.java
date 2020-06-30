@@ -75,6 +75,7 @@ public class FieldSettings {
     protected int griefRevertInterval = 0;
     protected int payToEnable = 0;
     protected int rentsLimit = 0;
+    protected int maxPerPlayer = 0;
     protected List<String> commandOnEnter = new ArrayList<>();
     protected List<String> commandOnExit = new ArrayList<>();
     protected List<String> playerCommandOnEnter = new ArrayList<>();
@@ -384,6 +385,7 @@ public class FieldSettings {
         feed = loadInt("feed");
         repair = loadInt("repair");
         damage = loadInt("damage");
+        maxPerPlayer = loadInt("max-per-player", 15);
         maskOnDisabled = loadMaterial("mask-on-disabled");
         maskOnEnabled = loadMaterial("mask-on-enabled");
         mine = loadInt("mine");
@@ -1685,4 +1687,6 @@ public class FieldSettings {
     public double getPriceMultiplier() {
         return priceMultiplier;
     }
+
+    public int getMaxPerPlayer() { return maxPerPlayer; }
 }

@@ -1,6 +1,7 @@
 unbreakable-blocks: []
 force-field-blocks:
 - title: City Protection
+  max-per-player: 15
   block: diamond_block
   radius: 20
   custom-height: 15
@@ -590,6 +591,7 @@ settings:
   sneak-to-place-normal-block: true
   use-blockids-in-snitches: false
   use-commands-to-rent: true
+  use-permission-based-limits: false
   version: 14
 log:
   bypass-pvp: true
