@@ -112,7 +112,7 @@ public class LimitManager {
              */
             String fieldTitle = fs.getTitle().replaceAll(" ", "_").toLowerCase();
             if (plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle)) {
-                for(int i = fs.getMaxPerPlayer; i >= 0; i--;) {
+                for(int i = fs.getMaxPerPlayer; i >= 0; i--) {
                     if(plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle + "." + Integer.toString(i))) {
                         return i;
                     }
