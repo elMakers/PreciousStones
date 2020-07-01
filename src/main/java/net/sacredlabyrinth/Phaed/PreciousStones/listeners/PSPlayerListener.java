@@ -548,7 +548,7 @@ public class PSPlayerListener implements Listener {
 
 				if (useField != null) {
 					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
-						if (!useField.getSettings().canUse(new BlockTypeEntry(block))) {
+						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || is.getType() == Material.END_CRYSTAL) {
 							plugin.getCommunicationManager().warnUse(player, block, useField);
 							event.setCancelled(true);
 							return;
@@ -933,13 +933,13 @@ public class PSPlayerListener implements Listener {
 				}
 
 				if (block.getType() == Material.CRAFTING_TABLE || // workbench
-						block.getType() == Material.RED_BED || // bed
-						block.getType() == Material.OAK_DOOR || //wood door
+						plugin.getSettingsManager().isABed(block.getType()) || // bed
+						plugin.getSettingsManager().isADoor(block.getType()) || //wood door
 						block.getType() == Material.LEVER || //lever
 						block.getType() == Material.MINECART || // cart (.. what??)
 						block.getType() == Material.NOTE_BLOCK || /// note
 						block.getType() == Material.JUKEBOX || // juke
-						block.getType() == Material.STONE_BUTTON || block.getType() == Material.OAK_BUTTON) // button
+						plugin.getSettingsManager().isAButton(block.getType())) // button
 				{
 					plugin.getSnitchManager().recordSnitchUsed(player, block);
 				}
