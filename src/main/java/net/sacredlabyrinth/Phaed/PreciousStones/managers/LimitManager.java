@@ -30,9 +30,12 @@ public class LimitManager {
      * @return
      */
     public boolean reachedLimit(Player player, FieldSettings fs) {
+
+        plugin.getLogger().info("reachedLimit Called!!!!!");
+
         List<Integer> limits = fs.getLimits();
 
-        if (limits.isEmpty() && plugin.getSettingsManager().isUsePermissionBasedLimits()) {
+        if (limits.isEmpty() && !plugin.getSettingsManager().isUsePermissionBasedLimits()) {
             return false;
         }
 
@@ -76,8 +79,10 @@ public class LimitManager {
      * @return the limit, -1 if no limit
      */
     public int getLimit(Player player, FieldSettings fs) {
+        plugin.getLogger().info("getLimit Called!!!!");
         //Check if config flag usePermissionBasedLimits set to false
         if (!plugin.getSettingsManager().isUsePermissionBasedLimits()) {
+            plugin.getLogger().info("permbasedLimits: " + Boolean.toString(plugin.getSettingsManager().isUsePermissionBasedLimits()));
             List<Integer> limits = fs.getLimits();
 
             if (limits.isEmpty()) {
@@ -111,6 +116,7 @@ public class LimitManager {
              * if not, then there will be no limit
              */
             String fieldTitle = fs.getTitle().replaceAll(" ", "_").toLowerCase();
+            plugin.getLogger().info("fieldTitle: " + fieldTitle);
             if (plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle)) {
                 for(int i = fs.getMaxPerPlayer(); i >= 0; i--) {
                     if(plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle + "." + Integer.toString(i))) {
