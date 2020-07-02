@@ -202,7 +202,7 @@ public class PSEntityListener implements Listener {
 
 		// prevent explosion if explosion protected
 
-		if (plugin.getForceFieldManager().hasSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_EXPLOSIONS)) {
+		if (!(event.getEntity() instanceof EnderCrystal) && plugin.getForceFieldManager().hasSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_EXPLOSIONS)) {
 			event.setCancelled(true);
 		}
 
@@ -212,7 +212,7 @@ public class PSEntityListener implements Listener {
 			}
 		}
 
-		if (event.getEntity() instanceof TNTPrimed) {
+		if (event.getEntity() instanceof TNTPrimed || event.getEntity() instanceof Minecart) {
 			if (plugin.getForceFieldManager().hasSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_TNT_EXPLOSIONS)) {
 				event.setCancelled(true);
 			}
@@ -295,7 +295,7 @@ public class PSEntityListener implements Listener {
 				}
 			}
 
-			if (event.getEntity() instanceof TNTPrimed) {
+			if (event.getEntity() instanceof TNTPrimed || event.getEntity() instanceof Minecart) {
 				if (plugin.getForceFieldManager().hasSourceField(event.getEntity().getLocation(), FieldFlag.PREVENT_TNT_EXPLOSIONS)) {
 					saved.add(new BlockEntry(block));
 					event.setCancelled(true);
@@ -489,7 +489,7 @@ public class PSEntityListener implements Listener {
 			}
 		}
 		
-		if (event.getEntity().getType().equals(EntityType.MINECART_TNT) || event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
+		if (event.getEntity() instanceof Minecart || event.getEntity().getType().equals(EntityType.PRIMED_TNT) || event.getEntity().getType().equals(EntityType.ENDER_CRYSTAL)) {
 			
 			Player player = Helper.getDamagingPlayer(event);
 
@@ -1019,6 +1019,36 @@ public class PSEntityListener implements Listener {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @param event
+	 */
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onEntityPlaceEvent(EntityPlaceEvent event) {
+		Block block = event.getBlock();
+		Player player = event.getPlayer();
+		if (plugin.getSettingsManager().isBlacklistedWorld(block.getLocation().getWorld())) {
+			return;
+		}
+
+        // -------------------------------------------------------------------------------------- prevent placing: armor stands, boats, minecarts, and end crystals.
+
+        Field field = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_PLACE);
+
+        if (field != null) {
+            if (!field.getSettings().inPlaceBlacklist(block)) {
+                if (FieldFlag.PREVENT_PLACE.applies(field, player)) {
+                    if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.place")) {
+                        plugin.getCommunicationManager().notifyBypassPlace(player, block, field);
+                    } else {
+                        event.setCancelled(true);
+                        plugin.getCommunicationManager().warnPlace(player, block, field);
+                    }
+                }
+            }
+        }
 	}
 
 	/**

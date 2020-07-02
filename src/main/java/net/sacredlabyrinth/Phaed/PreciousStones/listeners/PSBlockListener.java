@@ -1,6 +1,7 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.listeners;
 
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
+import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.BlockTypeEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.CuboidEntry;
 import net.sacredlabyrinth.Phaed.PreciousStones.entries.FieldSign;
@@ -16,6 +17,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,6 +28,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -1377,6 +1380,189 @@ public class PSBlockListener implements Listener {
             }
         }
     }
+    
+	/**
+	 * @param event
+	 */
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onBlockExplode(BlockExplodeEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		Block eventBlock = event.getBlock();
+
+		final List<BlockEntry> saved = new ArrayList<>();
+		final List<BlockEntry> unprotected = new ArrayList<>();
+		final List<BlockEntry> revert = new ArrayList<>();
+		final List<BlockEntry> tnts = new ArrayList<>();
+		Field rollbackField = null;
+
+		if (plugin.getSettingsManager().isBlacklistedWorld(eventBlock.getLocation().getWorld())) {
+			return;
+		}
+
+		List<Block> blocks = event.blockList();
+
+		for (Block block : blocks) {
+			// prevent block break if breaking unbreakable
+
+			if (plugin.getSettingsManager().isUnbreakableType(block) && plugin.getUnbreakableManager().isUnbreakable(block)) {
+				revert.add(new BlockEntry(block));
+				block.setType(Material.AIR, false);
+				continue;
+			}
+
+			// prevent block break if breaking field
+
+			if (plugin.getForceFieldManager().isField(block)) {
+				Field field = plugin.getForceFieldManager().getField(block);
+
+				if (field.hasFlag(FieldFlag.BREAKABLE)) {
+					plugin.getForceFieldManager().deleteField(field);
+					continue;
+				}
+
+				revert.add(new BlockEntry(block));
+				block.setType(Material.AIR, false);
+				continue;
+			}
+
+			// prevent explosion if explosion protected
+
+			if (plugin.getForceFieldManager().hasSourceField(block.getLocation(), FieldFlag.PREVENT_EXPLOSIONS)) {
+				saved.add(new BlockEntry(block));
+				event.setCancelled(true);
+				continue;
+			}
+
+			// prevent explosion if field sign
+
+			if (SignHelper.cannotBreakFieldSign(block, null)) {
+				event.setCancelled(true);
+				return;
+			}
+
+			// capture blocks to roll back in rollback fields
+
+			rollbackField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.ROLLBACK_EXPLOSIONS);
+
+			if (rollbackField != null) {
+				if (block.getType() != Material.TNT) {
+					plugin.getGriefUndoManager().addBlock(rollbackField, block, true);
+				} else {
+					tnts.add(new BlockEntry(block));
+				}
+				continue;
+			}
+
+			// record the blocks that are in undo fields
+
+			Field field = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.GRIEF_REVERT);
+
+			if (field != null && !field.getSettings().canGrief(new BlockTypeEntry(block.getType()))) {
+				if (block.getType() == Material.TNT) {
+					// trigger any tnt that exists inside the grief field blast radius
+
+					tnts.add(new BlockEntry(block));
+					block.setType(Material.AIR);
+				} else {
+					// record the griefed block
+
+					if (!plugin.getSettingsManager().isGriefUndoBlackListType(block.getType())) {
+						saved.add(new BlockEntry(block));
+						plugin.getGriefUndoManager().addBlock(field, block, true);
+					}
+				}
+
+				if (!saved.isEmpty()) {
+					plugin.getStorageManager().offerGrief(field);
+				}
+			} else {
+				// record the unprotected block
+
+				unprotected.add(new BlockEntry(block));
+			}
+
+			// remove the blocks
+
+			field = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.TRANSLOCATION);
+
+			if (field != null) {
+				if (field.isNamed()) {
+					plugin.getTranslocationManager().removeBlock(field, block);
+				}
+			}
+		}
+
+		// show explosion effect
+
+		if (event.isCancelled()) {
+			eventBlock.getLocation().getWorld().createExplosion(eventBlock.getLocation(), 0.0F, false);
+			eventBlock.getLocation().getWorld().playEffect(eventBlock.getLocation(), Effect.SMOKE, 1);
+		}
+
+		// trigger any tnts in the field
+
+		if (!tnts.isEmpty()) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				for (BlockEntry db : tnts) {
+					Block block = db.getLocation().getWorld().getBlockAt(db.getLocation());
+
+					if (block != null) {
+						Location midloc = new Location(block.getWorld(), block.getX() + .5, block.getY() + .5, block.getZ() + .5);
+						block.getWorld().spawn(midloc, TNTPrimed.class);
+						block.setType(Material.AIR);
+					}
+				}
+				tnts.clear();
+			}, 10);
+		}
+
+		// revert blocks from rollback fields (notice this is running after other tnts have been triggered)
+
+		if (rollbackField != null) {
+			final Field field = rollbackField;
+			field.setProgress(true);
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				plugin.getGriefUndoManager().undoDirtyGrief(field);
+				field.setProgress(false);
+			}, 2);
+		}
+
+		// revert any blocks that need reversion
+
+		if (!revert.isEmpty()) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				for (BlockEntry db : revert) {
+					Block block = db.getLocation().getBlock();
+					block.setType(db.getType(), true);
+				}
+				revert.clear();
+			}, 3);
+		}
+
+		// if some blocks were anti-grief then fake the explosion of the rest
+
+		if (!saved.isEmpty() && !unprotected.isEmpty()) {
+			event.setCancelled(true);
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				// remove all blocks and simulate drops for the blocks not in the field
+
+				for (BlockEntry db : unprotected) {
+					Block block = db.getLocation().getWorld().getBlockAt(db.getLocation());
+
+					if (!plugin.getPermissionsManager().canBuild(null, block.getLocation())) {
+						continue;
+					}
+
+					block.setType(Material.AIR);
+				}
+			}, 1);
+		}
+	}
 
     /**
      * @param event
