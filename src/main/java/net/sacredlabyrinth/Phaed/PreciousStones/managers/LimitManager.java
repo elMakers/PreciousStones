@@ -42,6 +42,10 @@ public class LimitManager {
             return false;
         }
 
+        if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.limit." + fs.getTitle().replace(" ", "_").toLowerCase())) {
+            return false;
+        }
+
         int limit = getLimit(player, fs);
         int count = plugin.getForceFieldManager().getFieldCount(player.getName(), fs.getTypeEntry()) +
                 plugin.getForceFieldManager().getRentedFieldCount(player.getName(), fs.getTypeEntry());
@@ -104,7 +108,7 @@ public class LimitManager {
 
             return -1;
 
-        } else {
+        } else if (plugin.getSettingsManager().isUsePermissionBasedLimits()) {
 
             //If config flag usePermissionBasedLimits set to true!
             /**
@@ -112,17 +116,17 @@ public class LimitManager {
              * where field_title is the name of a configured field, in lowercase, with spaces replaced with underscores.
              * if not, then there will be no limit
              */
-            String fieldTitle = fs.getTitle().replaceAll(" ", "_").toLowerCase();
-            if (plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle)) {
-                for (int i = fs.getMaxPerPlayer(); i >= 0; i--) {
-                    if (plugin.getPermissionsManager().has(player, "preciousstones.limit." + fieldTitle + "." + i)) {
+
+
+            for (int i = fs.getMaxPerPlayer(); i >= 0; i--) {
+                if (plugin.getPermissionsManager().has(player, String.format("preciousstones.limit.%f.%n", fs.getTitle().replace(" ", "_").toLowerCase(), i))) {
                         return i;
                     }
                 }
 
             }
 
-        }
+
         return -1;
     }
 }
