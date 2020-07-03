@@ -113,6 +113,7 @@ force-field-blocks:
   - lodestone
   - enchanting_table
   - campfire
+  - soul_campfire
   - name_tag
   - end_crystal
   - respawn_anchor

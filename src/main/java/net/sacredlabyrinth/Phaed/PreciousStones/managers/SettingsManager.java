@@ -7,7 +7,6 @@ import net.sacredlabyrinth.Phaed.PreciousStones.field.Field;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldFlag;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldSettings;
 import net.sacredlabyrinth.Phaed.PreciousStones.helpers.Helper;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -569,6 +568,8 @@ public final class SettingsManager {
         		block.getType().equals(Material.JUKEBOX) ||
         		block.getType().equals(Material.LEVER) ||
                 block.getType().equals(Material.REPEATER) ||
+                block.getType().equals(Material.DAYLIGHT_DETECTOR) ||
+                block.getType().equals(Material.NOTE_BLOCK) ||
                 isAButton(block.getType()) ||
                 isAPressurePlate(block.getType());
     }
