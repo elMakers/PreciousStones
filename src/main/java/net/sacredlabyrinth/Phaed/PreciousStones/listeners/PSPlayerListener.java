@@ -519,6 +519,20 @@ public class PSPlayerListener implements Listener {
 		// added for 1.9 change where the PlayerInteractEvent fires twice one for each hand
 
 		if (hand != null && !hand.equals(EquipmentSlot.HAND)) {
+			if (block != null) {
+				if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.use")) {
+					Field useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE);
+
+					if (useField != null) {
+						if (FieldFlag.PREVENT_USE.applies(useField, player)) {
+							if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || is.getType() == Material.END_CRYSTAL) {
+								event.setCancelled(true);
+								return;
+							}
+						}
+					}
+				}
+			}
 			return;
 		}
 
@@ -541,14 +555,14 @@ public class PSPlayerListener implements Listener {
 		}
 
 		// -------------------------------------------------------------------------------- interacting with use protected block
-
+		
 		if (block != null) {
 			if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.use")) {
 				Field useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE);
 
 				if (useField != null) {
 					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
-						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || is.getType() == Material.END_CRYSTAL) {
+						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || plugin.getSettingsManager().isASign(block.getType())  || is.getType() == Material.END_CRYSTAL) {
 							plugin.getCommunicationManager().warnUse(player, block, useField);
 							event.setCancelled(true);
 							return;

@@ -643,7 +643,15 @@ public final class SettingsManager {
     			type == Material.JUNGLE_SIGN ||
     			type == Material.OAK_SIGN ||
     	    	type == Material.SPRUCE_SIGN ||
-    	    	type == Material.WARPED_SIGN;
+    	    	type == Material.WARPED_SIGN ||
+    	    	type == Material.ACACIA_WALL_SIGN || 
+    			type == Material.BIRCH_WALL_SIGN ||
+    		    type == Material.CRIMSON_WALL_SIGN ||
+    			type == Material.DARK_OAK_WALL_SIGN ||
+    			type == Material.JUNGLE_WALL_SIGN ||
+    			type == Material.OAK_WALL_SIGN ||
+    	    	type == Material.SPRUCE_WALL_SIGN ||
+    	    	type == Material.WARPED_WALL_SIGN;
     }
     
     public boolean isABed(Material type) {
