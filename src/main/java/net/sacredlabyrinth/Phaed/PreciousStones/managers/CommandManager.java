@@ -100,87 +100,100 @@ public final class CommandManager implements CommandExecutor {
                         }
                         return true;
                     } else if (cmd.equalsIgnoreCase(ChatHelper.format("commandAllow")) && plugin.getPermissionsManager().has(player, "preciousstones.whitelist.allow") && hasplayer) {
-                        if (args.length >= 1) {
-                            Field field = plugin.getForceFieldManager().getOneOwnedField(block, player, FieldFlag.ALL);
+						if (args.length >= 2) {
+							Field field = plugin.getForceFieldManager().getOneOwnedField(block, player, FieldFlag.ALL);
 
-                            if (field != null) {
-                                if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.no-allowing")) {
-                                    if (field.hasFlag(FieldFlag.NO_ALLOWING)) {
-                                        ChatHelper.send(sender, "noSharing");
-                                        return true;
-                                    }
-                                }
+							if (field != null) {
+								if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.no-allowing")) {
+									if (field.hasFlag(FieldFlag.NO_ALLOWING)) {
+										ChatHelper.send(sender, "noSharing");
+										return true;
+									}
+								}
 
-                                if (field.hasFlag(FieldFlag.MODIFY_ON_DISABLED)) {
-                                    if (!field.isDisabled()) {
-                                        ChatHelper.send(sender, "onlyModWhileDisabled");
-                                        return true;
-                                    }
-                                }
+								if (field.hasFlag(FieldFlag.MODIFY_ON_DISABLED)) {
+									if (!field.isDisabled()) {
+										ChatHelper.send(sender, "onlyModWhileDisabled");
+										return true;
+									}
+								}
 
-                                if (field.isGuest(player.getName())) {
-                                    ChatHelper.send(sender, "cannotAllowAsGuest");
-                                    return true;
-                                }
+								if (field.isGuest(player.getName())) {
+									ChatHelper.send(sender, "cannotAllowAsGuest");
+									return true;
+								}
 
-                                boolean isGuest = false;
-                                for (String playerName : args) {
-                                    if (playerName.contains("-g")) {
-                                        isGuest = true;
-                                        continue;
-                                    }
+								boolean isGuest = false;
+								String playerName = args[0];
+								String member = args[1];
+								if (member.equalsIgnoreCase("guest") || member.equalsIgnoreCase("g")) {
+									isGuest = true;
+								} else if (member.equalsIgnoreCase("coowner") || member.equalsIgnoreCase("co") || member.equalsIgnoreCase("c")) {
+									isGuest = false;
+								} else {
+									ChatHelper.send(sender, "incorrectMemberTypeAllow", playerName);
+									return true;
+								}
 
-                                    Player allowed = Bukkit.getServer().getPlayerExact(playerName);
+								Player allowed = Bukkit.getServer().getPlayerExact(playerName);
 
-                                    // only those with permission can be allowed
+								// only those with permission can be allowed
 
-                                    if (!field.getSettings().getRequiredPermissionAllow().isEmpty()) {
-                                        if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.required-permission")) {
-                                            if (!plugin.getPermissionsManager().has(allowed, field.getSettings().getRequiredPermissionAllow())) {
-                                                ChatHelper.send(sender, "noPermsForAllow", playerName);
-                                                continue;
-                                            }
-                                        }
-                                    }
+								if (!field.getSettings().getRequiredPermissionAllow().isEmpty()) {
+									if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.required-permission")) {
+										if (!plugin.getPermissionsManager().has(allowed, field.getSettings().getRequiredPermissionAllow())) {
+											ChatHelper.send(sender, "noPermsForAllow", playerName);
+										}
+									}
+								}
 
-                                    boolean done = plugin.getForceFieldManager().addAllowed(field, playerName, isGuest);
+								boolean done = plugin.getForceFieldManager().addAllowed(field, playerName, isGuest);
 
-                                    if (done) {
-                                        plugin.getEntryManager().reevaluateEnteredFields(allowed);
+								String type = "guest";
+								if(!isGuest)
+									type = "co-owner";
+								if (done) {
+									plugin.getEntryManager().reevaluateEnteredFields(allowed);
 
-                                        ChatHelper.send(sender, "hasBeenAllowed", playerName);
-                                    } else {
-                                        ChatHelper.send(sender, "alreadyAllowed", playerName);
-                                    }
-                                }
-                            } else {
-                                plugin.getCommunicationManager().showNotFound(player);
-                            }
+									ChatHelper.send(sender, "hasBeenAllowed", playerName, type);
+								} else {
+									ChatHelper.send(sender, "alreadyAllowed", playerName, type);
+								}
+							} else {
+								plugin.getCommunicationManager().showNotFound(player);
+							}
 
-                        } else
-                        	ChatHelper.send(sender, "notEnoughArgumentsMenu3");
-                        return true;
+						} else
+							ChatHelper.send(sender, "notEnoughArgumentsMenu3");
+						return true;
                     } else if (cmd.equalsIgnoreCase(ChatHelper.format("commandAllowall")) && plugin.getPermissionsManager().has(player, "preciousstones.whitelist.allowall") && hasplayer) {
-                        if (args.length >= 1) {
-                            boolean isGuest = false;
-                            for (String playerName : args) {
-                                if (playerName.contains("-g")) {
-                                    isGuest = true;
-                                    continue;
-                                }
-                                int count = plugin.getForceFieldManager().allowAll(player, playerName, isGuest);
+                        if (args.length >= 2) {
+							boolean isGuest = false;
+							String playerName = args[0];
+							String member = args[1];
+							if (member.equalsIgnoreCase("guest") || member.equalsIgnoreCase("g")) {
+								isGuest = true;
+							} else if (member.equalsIgnoreCase("coowner") || member.equalsIgnoreCase("co") || member.equalsIgnoreCase("c")) {
+								isGuest = false;
+							} else {
+								ChatHelper.send(sender, "incorrectMemberTypeAllowall", playerName);
+								return true;
+							}
+							int count = plugin.getForceFieldManager().allowAll(player, playerName, isGuest);
 
-                                if (count > 0) {
-                                    plugin.getEntryManager().reevaluateEnteredFields(Bukkit.getServer().getPlayerExact(playerName));
+							String type = "guest";
+							if (!isGuest)
+								type = "co-owner";
+							if (count > 0) {
+								plugin.getEntryManager().reevaluateEnteredFields(Bukkit.getServer().getPlayerExact(playerName));
 
-                                    ChatHelper.send(sender, "hasBeenAllowedIn", playerName, count);
-                                } else {
-                                    ChatHelper.send(sender, "isAlreadyAllowedOnAll", playerName);
-                                }
-                            }
+								ChatHelper.send(sender, "hasBeenAllowedIn", playerName, count, type);
+							} else {
+								ChatHelper.send(sender, "isAlreadyAllowedOnAll", playerName, type);
+							}
 
-                        } else
-                        	ChatHelper.send(sender, "notEnoughArgumentsMenu4");
+						} else
+							ChatHelper.send(sender, "notEnoughArgumentsMenu4");
                         return true;
                     } else if (cmd.equalsIgnoreCase(ChatHelper.format("commandRemove")) && plugin.getPermissionsManager().has(player, "preciousstones.whitelist.remove") && hasplayer) {
                         if (args.length >= 1) {
@@ -478,12 +491,31 @@ public final class CommandManager implements CommandExecutor {
                     } else if (cmd.equalsIgnoreCase(ChatHelper.format("commandTake")) && plugin.getPermissionsManager().has(player, "preciousstones.benefit.take") && hasplayer) {
                         Field field = plugin.getForceFieldManager().getOneOwnedField(block, player, FieldFlag.ALL);
 
-                        if (field != null) {
-                            boolean taken = field.take(player);
+						if (field != null) {
 
-                            if (taken) {
-                                ChatHelper.send(sender, "taken", field.getType(), field.getCoords());
-                            }
+							if (field.isOwner(player.getName())) {
+							} else if (field.hasFlag(FieldFlag.BREAKABLE)) {
+							} else if (field.hasFlag(FieldFlag.ALLOWED_CAN_BREAK)) {
+								if (!plugin.getForceFieldManager().isAllowed(field.getBlock(), player.getName())) {
+									plugin.getCommunicationManager().warnDestroyFF(player, field.getBlock());
+									return true;
+								}
+							} else if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.forcefield")) {
+							} else {
+								plugin.getCommunicationManager().warnDestroyFF(player, field.getBlock());
+								return true;
+							}
+
+							if (plugin.getForceFieldManager().hasSubFields(field)) {
+								ChatHelper.send(player, "cannotRemoveWithSubplots");
+								return true;
+							}
+
+							boolean taken = field.take(player);
+
+							if (taken) {
+								ChatHelper.send(sender, "taken", field.getType(), field.getCoords());
+							}
                         } else {
                             plugin.getCommunicationManager().showNotFound(player);
                         }
@@ -1529,6 +1561,9 @@ public final class CommandManager implements CommandExecutor {
                                     field.setOwner(owner);
                                     plugin.getStorageManager().offerField(field);
                                     ChatHelper.send(sender, "ownerSetTo", owner);
+                                    Player futureOwner = Bukkit.getPlayer(owner);
+                                    if(futureOwner != null)
+                                    	ChatHelper.send(futureOwner, "youAreNowOwner", sender.getName(), field.getSettings().getMetaName(), field.getCoords());
                                     return true;
                                 }
                             }
@@ -1557,6 +1592,9 @@ public final class CommandManager implements CommandExecutor {
                                         if (field.hasFlag(FieldFlag.CAN_CHANGE_OWNER)) {
                                             plugin.getForceFieldManager().changeOwner(field, owner);
                                             ChatHelper.send(sender, "fieldCanBeTaken", owner);
+                                            Player futureOwner = Bukkit.getPlayer(owner);
+                                            if(futureOwner != null)
+                                            	ChatHelper.send(futureOwner, "youCanTakeField", sender.getName(), field.getSettings().getMetaName(), field.getCoords());
                                             return true;
                                         } else {
                                             ChatHelper.send(sender, "fieldCannotChangeOwner");
