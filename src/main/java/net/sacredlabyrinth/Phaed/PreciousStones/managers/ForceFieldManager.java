@@ -1998,7 +1998,7 @@ public final class ForceFieldManager {
                 continue;
             }
 
-            if (isAllowed(field, placer.getName())) {
+            if (isAllowed(field, placer.getName()) && !field.isGuest(placer.getName())) {
                 continue;
             }
 
