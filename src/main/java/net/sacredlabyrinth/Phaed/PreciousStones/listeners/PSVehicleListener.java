@@ -17,10 +17,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -73,28 +76,64 @@ public class PSVehicleListener implements Listener {
     /**
      * @param event
      */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onVehicleDestroy(VehicleDestroyEvent event) {
-        Vehicle vehicle = event.getVehicle();
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onVehicleDestroy(VehicleDestroyEvent event) {
+		Vehicle vehicle = event.getVehicle();
 
-        Field field = plugin.getForceFieldManager().getEnabledSourceField(vehicle.getLocation(), FieldFlag.PREVENT_VEHICLE_DESTROY);
+		if (event.getAttacker() instanceof Player) {
 
-        if (field != null) {
-            if (event.getAttacker() instanceof Player) {
-                Player player = (Player) event.getAttacker();
+			Field field = plugin.getForceFieldManager().getEnabledSourceField(vehicle.getLocation(), FieldFlag.PREVENT_VEHICLE_DESTROY);
 
-                if (FieldFlag.PREVENT_VEHICLE_DESTROY.applies(field, player)) {
-                    if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.destroy")) {
-                        plugin.getCommunicationManager().notifyBypassDestroyVehicle(player, vehicle, field);
-                    } else {
-                        event.setCancelled(true);
-                        plugin.getCommunicationManager().warnDestroyVehicle(player, vehicle, field);
-                        return;
-                    }
-                }
-            }
-        }
-    }
+			if (field != null) {
+				Player player = (Player) event.getAttacker();
+
+				if (FieldFlag.PREVENT_VEHICLE_DESTROY.applies(field, player)) {
+					if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.destroy")) {
+						plugin.getCommunicationManager().notifyBypassDestroyVehicle(player, vehicle, field);
+					} else {
+						event.setCancelled(true);
+						plugin.getCommunicationManager().warnDestroyVehicle(player, vehicle, field);
+						return;
+					}
+				}
+			}
+		}
+	}
+    
+    /**
+     * @param event
+     */
+	@EventHandler
+	public void onVehicleDamage(VehicleDamageEvent event) {
+		Vehicle vehicle = event.getVehicle();
+
+		if (event.getAttacker() instanceof Player) {
+			Field field = plugin.getForceFieldManager().getEnabledSourceField(vehicle.getLocation(), FieldFlag.PREVENT_VEHICLE_DESTROY);
+
+			if (field != null) {
+				Player player = (Player) event.getAttacker();
+				
+
+				if (FieldFlag.PREVENT_VEHICLE_DESTROY.applies(field, player)) {
+					if (event.getVehicle() instanceof Minecart) {
+						if (player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK) > 0) {
+							player.sendMessage("Level: " + player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK));
+							if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.destroy")) {
+								plugin.getCommunicationManager().notifyBypassDestroyVehicle(player, vehicle, field);
+							} else {
+								Bukkit.getScheduler().runTaskLater(plugin, () -> {
+									event.getVehicle().setVelocity(new Vector(0, 0, 0));
+								}, 1);
+								event.setCancelled(true);
+								plugin.getCommunicationManager().warnDestroyVehicle(player, vehicle, field);
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
     /**
      * @param event
