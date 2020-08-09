@@ -618,6 +618,7 @@ public final class SettingsManager {
     			type == Material.JUNGLE_PRESSURE_PLATE ||
     	    	type == Material.LIGHT_WEIGHTED_PRESSURE_PLATE ||
     	    	type == Material.OAK_PRESSURE_PLATE ||
+		type == Material.POLISHED_BLACKSTONE_PRESSURE_PLATE ||
     	    	type == Material.SPRUCE_PRESSURE_PLATE ||
     	    	type == Material.STONE_PRESSURE_PLATE ||
     	        type == Material.WARPED_PRESSURE_PLATE;
@@ -630,6 +631,7 @@ public final class SettingsManager {
     			type == Material.DARK_OAK_BUTTON ||
     			type == Material.JUNGLE_BUTTON ||
     			type == Material.OAK_BUTTON ||
+		type == Material.POLISHED_BLACKSTONE_BUTTON ||
     	    	type == Material.SPRUCE_BUTTON ||
     	    	type == Material.STONE_BUTTON ||
     	    	type == Material.WARPED_BUTTON;
