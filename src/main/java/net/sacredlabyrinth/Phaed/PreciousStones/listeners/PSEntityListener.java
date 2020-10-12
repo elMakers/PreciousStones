@@ -532,7 +532,7 @@ public class PSEntityListener implements Listener {
 			}
 		}
 
-		if (event.getEntity() instanceof Ageable) {
+		if (event.getEntity() instanceof Ageable && !(event.getEntity() instanceof Monster)) {
 			Field field = plugin.getForceFieldManager().getEnabledSourceField(event.getEntity().getLocation(), FieldFlag.PROTECT_ANIMALS);
 
 			if (field != null) {

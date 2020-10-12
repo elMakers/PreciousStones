@@ -554,48 +554,6 @@ public class PSPlayerListener implements Listener {
 			}
 		}
 
-		// -------------------------------------------------------------------------------- interacting with use protected block
-		
-		if (block != null) {
-			if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.use")) {
-				Field useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE);
-
-				if (useField != null) {
-					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
-						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || plugin.getSettingsManager().isASign(block.getType())  || is.getType() == Material.END_CRYSTAL) {
-							plugin.getCommunicationManager().warnUse(player, block, useField);
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-
-				if (plugin.getSettingsManager().isAnyTypeOfDoor(block.getType())) {
-					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_DOORS);
-
-					if (useField != null) {
-						if (FieldFlag.PREVENT_USE_DOORS.applies(useField, player)) {
-							plugin.getCommunicationManager().warnUse(player, block, useField);
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-
-				if (plugin.getSettingsManager().isRedstone(block)) {
-					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_REDSTONE);
-
-					if (useField != null) {
-						if (FieldFlag.PREVENT_USE_REDSTONE.applies(useField, player)) {
-							plugin.getCommunicationManager().warnUse(player, block, useField);
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-			}
-		}
-
 		// -------------------------------------------------------------------------------- trying to spawn mobs/animals with spawn egg
 
 		if (block != null) {
@@ -743,14 +701,18 @@ public class PSPlayerListener implements Listener {
 							if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 								PreciousStones.debug("owner right clicked on sign");
 
+								if (field.getRentingModule().hasPendingPayments()) {
+									PreciousStones.debug("field is has pending payments, take them");
+									field.getRentingModule().takePayment(player);
+								}
 								if (field.isRented()) {
-									if (field.getRentingModule().hasPendingPayments()) {
+									/*if (field.getRentingModule().hasPendingPayments()) {
 										PreciousStones.debug("field is has pending payments, take them");
 										field.getRentingModule().takePayment(player);
-									} else {
+									} else {*/
 										PreciousStones.debug("no pending payments, just show info");
 										plugin.getCommunicationManager().showRenterInfo(player, field);
-									}
+									//}
 								} else {
 									PreciousStones.debug("field hasn't been rented");
 
@@ -765,6 +727,48 @@ public class PSPlayerListener implements Listener {
 
 						if (s.getFailReason() != null) {
 							ChatHelper.send(player, s.getFailReason());
+						}
+					}
+				}
+			}
+		}
+		
+		// -------------------------------------------------------------------------------- interacting with use protected block
+		
+		if (block != null) {
+			if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.use")) {
+				Field useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE);
+
+				if (useField != null) {
+					if (FieldFlag.PREVENT_USE.applies(useField, player)) {
+						if (!useField.getSettings().canUse(new BlockTypeEntry(block)) || plugin.getSettingsManager().isASign(block.getType())  || is.getType() == Material.END_CRYSTAL) {
+							plugin.getCommunicationManager().warnUse(player, block, useField);
+							event.setCancelled(true);
+							return;
+						}
+					}
+				}
+
+				if (plugin.getSettingsManager().isAnyTypeOfDoor(block.getType())) {
+					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_DOORS);
+
+					if (useField != null) {
+						if (FieldFlag.PREVENT_USE_DOORS.applies(useField, player)) {
+							plugin.getCommunicationManager().warnUse(player, block, useField);
+							event.setCancelled(true);
+							return;
+						}
+					}
+				}
+
+				if (plugin.getSettingsManager().isRedstone(block)) {
+					useField = plugin.getForceFieldManager().getEnabledSourceField(block.getLocation(), FieldFlag.PREVENT_USE_REDSTONE);
+
+					if (useField != null) {
+						if (FieldFlag.PREVENT_USE_REDSTONE.applies(useField, player)) {
+							plugin.getCommunicationManager().warnUse(player, block, useField);
+							event.setCancelled(true);
+							return;
 						}
 					}
 				}

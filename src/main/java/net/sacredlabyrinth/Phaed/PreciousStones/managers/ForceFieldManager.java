@@ -1825,6 +1825,41 @@ public final class ForceFieldManager {
     }
 
     /**
+     * Returns the field pointed at matching field flags
+     *
+     * @param player
+     * @return the field
+     */
+    public Field getPointedField(Player player, boolean allowed, FieldFlag flag) {
+        TargetBlock aiming = new TargetBlock(player, plugin.getSettingsManager().getMaxTargetDistance(), 0.2, plugin.getSettingsManager().getThroughFieldsSet());
+        Block targetBlock = aiming.getTargetBlock();
+
+        if (targetBlock != null) {
+            Field f = getField(targetBlock);
+
+            if (f != null) {
+                if (f.isChild()) {
+                    f = f.getParent();
+                }
+                
+                if (!f.hasFlag(flag)) {
+                    return null;
+                }
+
+                if (!allowed) {
+                    return f;
+                }
+
+                if (isAllowed(f, player.getName())) {
+                    return f;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    /**
      * Returns the field pointed at
      *
      * @param player
@@ -1863,7 +1898,7 @@ public final class ForceFieldManager {
      * @return the field
      */
     public Field getOneAllowedField(final Block blockInArea, final Player player, FieldFlag flag) {
-        Field pointed = getPointedField(player, true);
+        Field pointed = getPointedField(player, true, flag);
 
         if (pointed != null) {
             return pointed;
@@ -1885,7 +1920,7 @@ public final class ForceFieldManager {
      * @return the field
      */
     public Field getOneOwnedField(final Block blockInArea, final Player player, FieldFlag flag) {
-        Field pointed = getPointedField(player, true);
+        Field pointed = getPointedField(player, true, flag);
 
         if (pointed != null) {
             return pointed;
@@ -1906,7 +1941,7 @@ public final class ForceFieldManager {
      * @return the field
      */
     public Field getOneNonOwnedField(final Block blockInArea, final Player player, FieldFlag flag) {
-        Field pointed = getPointedField(player, false);
+        Field pointed = getPointedField(player, false, flag);
 
         if (pointed != null) {
             return pointed;
@@ -1927,7 +1962,7 @@ public final class ForceFieldManager {
      * @return the field
      */
     public Field getOneField(final Block blockInArea, final Player player, FieldFlag flag) {
-        Field pointed = getPointedField(player, true);
+        Field pointed = getPointedField(player, true, flag);
 
         if (pointed != null) {
             return pointed;

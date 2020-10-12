@@ -299,17 +299,17 @@ public class RentingModule {
                 StackHelper.give(player, entry.getItem(), entry.getAmount());
 
                 if (entry.getFieldName().isEmpty()) {
-                    ChatHelper.send(player, "fieldSignItemPaymentReceivedNoName", entry.getAmount(), entry.getItem(), entry.getPlayer());
+                    ChatHelper.send(player, "fieldSignItemPaymentReceivedNoName", entry.getAmount(), entry.getItem(), entry.getPlayer(), field.getCoords());
                 } else {
-                    ChatHelper.send(player, "fieldSignItemPaymentReceived", entry.getAmount(), entry.getItem(), entry.getPlayer(), entry.getFieldName());
+                    ChatHelper.send(player, "fieldSignItemPaymentReceived", entry.getAmount(), entry.getItem(), entry.getPlayer(), entry.getFieldName(), field.getCoords());
                 }
             } else {
                 PreciousStones.getInstance().getPermissionsManager().playerCredit(player, entry.getAmount());
 
                 if (entry.getFieldName().isEmpty()) {
-                    ChatHelper.send(player, "fieldSignPaymentReceivedNoName", entry.getAmount(), entry.getPlayer());
+                    ChatHelper.send(player, "fieldSignPaymentReceivedNoName", entry.getAmount(), entry.getPlayer(), field.getCoords());
                 } else {
-                    ChatHelper.send(player, "fieldSignPaymentReceived", entry.getAmount(), entry.getPlayer(), entry.getFieldName());
+                    ChatHelper.send(player, "fieldSignPaymentReceived", entry.getAmount(), entry.getPlayer(), entry.getFieldName(), field.getCoords());
                 }
             }
         }

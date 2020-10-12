@@ -295,7 +295,8 @@ public final class CommandManager implements CommandExecutor {
                                     plugin.getCommunicationManager().showNotFound(player);
                                 }
                             } else if ((args[0]).equals(ChatHelper.format("commandCuboidClose"))) {
-                                plugin.getCuboidManager().closeCuboid(player);
+                                if(!plugin.getCuboidManager().closeCuboid(player))
+                                	ChatHelper.send(player, "notifyCantCloseCuboid");
                             }
 
                         } else
@@ -1654,7 +1655,8 @@ public final class CommandManager implements CommandExecutor {
 
                                         return true;
                                     }
-                                }
+                                } else
+                                	ChatHelper.send(sender, "fieldNotOnSale");
                             }
                             return true;
                         }
@@ -1705,7 +1707,8 @@ public final class CommandManager implements CommandExecutor {
 
                                         return true;
                                     }
-                                }
+                                } else
+                                	ChatHelper.send(sender, "fieldNotOnRent");
                             }
 
                             return true;
