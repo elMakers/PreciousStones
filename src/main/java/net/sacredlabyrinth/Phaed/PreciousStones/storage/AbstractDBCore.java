@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 abstract class AbstractDBCore implements DBCore {
@@ -13,11 +12,6 @@ abstract class AbstractDBCore implements DBCore {
     
     AbstractDBCore(VendorType vendorType) {
         this.vendorType = vendorType;
-    }
-    
-    static void setExtraPoolDetails(HikariConfig hikariConf) {
-        hikariConf.setMinimumIdle(2);
-        hikariConf.setMaximumPoolSize(2);
     }
     
     abstract HikariDataSource getDataSource();

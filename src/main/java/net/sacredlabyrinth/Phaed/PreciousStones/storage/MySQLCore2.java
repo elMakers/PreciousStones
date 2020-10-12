@@ -26,7 +26,8 @@ class MySQLCore2 extends AbstractDBCore {
         hikariConf.setJdbcUrl("jdbc:mysql://" + host + ':' + port + '/' + database + "?useUnicode=true&characterEncoding=utf-8");
         hikariConf.setUsername(username);
         hikariConf.setPassword(password);
-        setExtraPoolDetails(hikariConf);
+        hikariConf.setMinimumIdle(3);
+        hikariConf.setMaximumPoolSize(3);
         dataSource = new HikariDataSource(hikariConf);
     }
 
