@@ -564,12 +564,10 @@ public class Field extends AbstractVec implements Comparable<Field> {
         }
 
         if (target.contains("c:")) {
-            String clan = PreciousStones.getInstance().getSimpleClansManager().getClan(target);
+            String clan = PreciousStones.getInstance().getSimpleClansManager().getClan(target.substring(2), false);
 
             if (clan != null) {
-                if (allowed.contains("c:" + clan)) {
-                    return true;
-                }
+                return allowed.contains("c:" + clan);
             }
 
             // short-circuit clans

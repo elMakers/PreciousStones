@@ -252,7 +252,7 @@ public final class ForceFieldManager {
         // add allowed clan
 
         if (plugin.getSettingsManager().isAutoAddClan()) {
-            String clan = plugin.getSimpleClansManager().getClan(player.getName());
+            String clan = plugin.getSimpleClansManager().getClan(player.getName(), true);
 
             if (clan != null) {
                 field.addAllowed("c:" + clan);
@@ -1224,66 +1224,76 @@ public final class ForceFieldManager {
     }
 
     /**
-     * Whether the player is allowed in the field
+     * Checks whether or not the target is allowed in the field
      *
      * @param field
      * @param target
-     * @return
+     * @param checkField
+     * @return whether or not the target is allowed in this field
      */
-    public boolean isAllowed(Field field, String target) {
+    public boolean isAllowed(Field field, String target, boolean checkField) {
         if (field == null || target == null) {
             return false;
         }
 
-        Player player = Bukkit.getServer().getPlayerExact(target);
+        // Check if the field has settings
+        if (field.getSettings() == null) {
+            return false;
+        }
 
-        if (player != null) {
-            // allow if admin
+        // Don't run player checks if the target is a group or clan
+        if (target.contains("c:") || target.contains("g:")) {
+            // Fetch Player
+            Player player = Bukkit.getServer().getPlayerExact(target);
 
+            // Allow the player if they are an admin and the field allows allowing
             if (plugin.getPermissionsManager().has(player, "preciousstones.admin.allowed")) {
                 if (!field.hasFlag(FieldFlag.NO_ALLOWING)) {
                     return true;
                 }
             }
-        }
 
-        // false if settings missing
-
-        if (field.getSettings() == null) {
-            return false;
-        }
-
-        // deny if doesn't have the required perms
-
-        if (!field.getSettings().getRequiredPermissionAllow().isEmpty()) {
-            if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.required-permission")) {
-                if (!plugin.getPermissionsManager().has(player, field.getSettings().getRequiredPermissionAllow())) {
-                    return false;
+            // Deny player if they do not have the required permission
+            if (!field.getSettings().getRequiredPermissionAllow().isEmpty()) {
+                if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.required-permission")) {
+                    if (!plugin.getPermissionsManager().has(player, field.getSettings().getRequiredPermissionAllow())) {
+                        return false;
+                    }
                 }
             }
         }
 
-        // allow if in global allowed list
-
+        // Allow if the target is in the global allowed list
         if (field.getSettings().inAllowedList(target)) {
             return true;
         }
 
-        // allow if in global deny list
-
+        // Deny if the target is in the global deny list
         if (field.getSettings().inDeniedList(target)) {
             return false;
         }
 
-        // always allow if in war
-
+        // If you're currently in war, allow
         if (plugin.getSettingsManager().isWarAllow()) {
             if (plugin.getSimpleClansManager().inWar(field, target)) {
                 return true;
             }
         }
 
-        return field.isAllowed(target);
+        // Otherwise, allow
+        return !checkField || field.isAllowed(target);
+    }
+
+    /**
+     * Checks whether or not the target is allowed in the field
+     *
+     * @param field
+     * @param target
+     * @return whether or not the target is allowed in this field
+     */
+    @Deprecated
+    public boolean isAllowed(Field field, String target) {
+        return isAllowed(field, target, true);
     }
 
     /**
@@ -1357,43 +1367,46 @@ public final class ForceFieldManager {
     }
 
     /**
-     * Add allowed player to all your force fields
+     * Adds an allowed player to all force fields
      *
      * @param player
      * @param allowedName
-     * @return count of fields allowed
+     * @param isGuest
+     * @return the number of fields this player has been allowed to
      */
     public int allowAll(Player player, String allowedName, boolean isGuest) {
-        List<Field> fields = getOwnersFields(player, FieldFlag.ALL);
+        List<Field> fields = this.getOwnersFields(player, FieldFlag.ALL);
 
         int allowedCount = 0;
-        int notAllowed = 0;
+        int notAllowedCount = 0;
 
-        for (Field field : fields) {
-            if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.on-disabled")) {
-                if (field.hasFlag(FieldFlag.MODIFY_ON_DISABLED)) {
-                    if (!field.isDisabled()) {
-                        notAllowed++;
-                        continue;
-                    }
-                }
+        // Cache commonly used values so we don't request them for every field
+        boolean bypassModifyOnDisabled = plugin.getPermissionsManager().has(player, "preciousstones.bypass.on-disabled");
+        boolean bypassNoAllowing = plugin.getPermissionsManager().has(player, "preciousstones.bypass.no-allowing");
+
+        for (Field  field : fields) {
+            // Modify on Disabled
+            if (!bypassModifyOnDisabled && field.hasFlag(FieldFlag.MODIFY_ON_DISABLED) && !field.isDisabled()) {
+                notAllowedCount++;
+                continue;
             }
 
-            if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.no-allowing")) {
-                if (field.hasFlag(FieldFlag.NO_ALLOWING)) {
-                    continue;
-                }
+            // No Allowing
+            if (!bypassNoAllowing && field.hasFlag(FieldFlag.NO_ALLOWING)) {
+                continue;
             }
 
-            if (!isAllowed(field, allowedName)) {
+            // Allow
+            if (isAllowed(field, allowedName, false)) {
                 if (addAllowed(field, allowedName, isGuest)) {
                     allowedCount++;
                 }
             }
         }
 
-        if (notAllowed > 0) {
-            ChatHelper.send(player, "fieldsSkipped", notAllowed);
+        // Notify of skipped fields
+        if (notAllowedCount > 0) {
+            ChatHelper.send(player, "fieldsSkipped", notAllowedCount);
         }
 
         return allowedCount;
@@ -2950,7 +2963,7 @@ public final class ForceFieldManager {
         // add allowed clan
 
         if (plugin.getSettingsManager().isAutoAddClan()) {
-            String clan = plugin.getSimpleClansManager().getClan(owner.getName());
+            String clan = plugin.getSimpleClansManager().getClan(owner.getName(), true);
 
             if (clan != null) {
                 field.addAllowed("c:" + clan);

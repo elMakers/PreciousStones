@@ -226,21 +226,41 @@ public final class SimpleClansManager {
     }
 
     /**
-     * @param playerName
-     * @return
+     * Gets a clan by the target provided
+     *
+     * @param target
+     * @param isPlayer
+     * @return the clan's tag
      */
-    public String getClan(String playerName) {
+    public String getClan(String target, boolean isPlayer) {
         if (hasSimpleClans()) {
-        	OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
-        	if (player != null) {
-	            net.sacredlabyrinth.phaed.simpleclans.ClanPlayer cp = simpleClans.getClanManager().getClanPlayer(player);
-	
-	            if (cp != null) {
-	                return cp.getTag();
-	            }
+            if (isPlayer) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(target);
+                net.sacredlabyrinth.phaed.simpleclans.ClanPlayer cp = simpleClans.getClanManager().getClanPlayer(player);
+
+                if (cp != null) {
+                    return cp.getTag();
+                }
+            } else {
+               net.sacredlabyrinth.phaed.simpleclans.Clan c = simpleClans.getClanManager().getClan(target);
+               if (c != null) {
+                   return c.getTag();
+               }
             }
         }
 
         return null;
     }
+
+    /**
+     * Gets a clan by a player name.
+     *
+     * @param target
+     * @return the clan's tag
+     */
+    @Deprecated
+    public String getClan(String target) {
+        return getClan(target, true);
+    }
+
 }
