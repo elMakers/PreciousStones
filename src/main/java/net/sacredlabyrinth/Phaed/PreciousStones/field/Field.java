@@ -550,28 +550,23 @@ public class Field extends AbstractVec implements Comparable<Field> {
             return true;
         }
 
-        if (target.contains("g:")) {
-            List<String> groups = PreciousStones.getInstance().getPermissionsManager().getGroups(getWorld(), target);
+        List<String> groups = PreciousStones.getInstance().getPermissionsManager().getGroups(getWorld(), target);
 
-            for (String group : groups) {
-                if (allowed.contains("g:" + group)) {
-                    return true;
-                }
+        for (String group : groups) {
+            if (allowed.contains("g:" + group)) {
+                return true;
             }
-
-            // short-circuit groups
-            return false;
         }
 
+        String clan;
         if (target.contains("c:")) {
-            String clan = PreciousStones.getInstance().getSimpleClansManager().getClan(target.substring(2), false);
+            clan = PreciousStones.getInstance().getSimpleClansManager().getClan(target.substring(2), false);
+        } else {
+            clan = PreciousStones.getInstance().getSimpleClansManager().getClan(target, true);
+        }
 
-            if (clan != null) {
-                return allowed.contains("c:" + clan);
-            }
-
-            // short-circuit clans
-            return false;
+        if (clan != null) {
+            return allowed.contains("c:" + clan);
         }
 
         // TODO: This method is very slow and can cause a lockup on the server thread
