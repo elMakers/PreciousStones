@@ -1242,7 +1242,7 @@ public final class ForceFieldManager {
         }
 
         // Don't run player checks if the target is a group or clan
-        if (target.contains("c:") || target.contains("g:")) {
+        if (!target.contains("c:")) {
             // Fetch Player
             Player player = Bukkit.getServer().getPlayerExact(target);
 
