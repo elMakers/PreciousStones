@@ -117,7 +117,6 @@ public class PSVehicleListener implements Listener {
 				if (FieldFlag.PREVENT_VEHICLE_DESTROY.applies(field, player)) {
 					if (event.getVehicle() instanceof Minecart) {
 						if (player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK) > 0) {
-							player.sendMessage("Level: " + player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK));
 							if (plugin.getPermissionsManager().has(player, "preciousstones.bypass.destroy")) {
 								plugin.getCommunicationManager().notifyBypassDestroyVehicle(player, vehicle, field);
 							} else {
