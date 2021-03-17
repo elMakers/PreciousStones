@@ -206,6 +206,7 @@ force-field-blocks:
   no-player-place: true
   prevent-mob-damage: true
   protect-animals: true
+  protect-watermobs: true
   protect-mobs: true
   protect-villagers: true
   cuboid: true

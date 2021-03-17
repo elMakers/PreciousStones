@@ -253,6 +253,7 @@ public class FieldSettings {
         loadBoolean("protect-armor-stands");
         loadBoolean("prevent-entity-interact");
         loadBoolean("protect-animals");
+        loadBoolean("protect-watermobs");
         loadBoolean("protect-villagers");
         loadBoolean("protect-crops");
         loadBoolean("protect-mobs");
