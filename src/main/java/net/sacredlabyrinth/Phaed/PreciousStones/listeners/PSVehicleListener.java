@@ -19,15 +19,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.vehicle.VehicleDamageEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import java.util.List;
 
@@ -200,4 +196,30 @@ public class PSVehicleListener implements Listener {
             }
         }
     }
+
+    /**
+     * @param event
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onVehicle(VehicleEntityCollisionEvent event){
+        Vehicle vehicle = event.getVehicle();
+        if (plugin.getSettingsManager().isBlacklistedWorld(vehicle.getLocation().getWorld())) {
+            return;
+        }
+
+        if(event.getEntity() instanceof Player){
+            Field field = plugin.getForceFieldManager().getEnabledSourceField(vehicle.getLocation(), FieldFlag.PREVENT_VEHICLE_MOVE);
+            Player player = (Player) event.getEntity();
+            if(field != null){
+                if(FieldFlag.PREVENT_VEHICLE_MOVE.applies(field, player)){
+                    event.setCancelled(true);
+                    event.setCollisionCancelled(true);
+                }
+            }
+        }
+
+
+    }
+
+
 }
