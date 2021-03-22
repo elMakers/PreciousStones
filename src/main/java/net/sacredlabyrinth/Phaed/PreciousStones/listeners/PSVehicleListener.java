@@ -202,16 +202,15 @@ public class PSVehicleListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicle(VehicleEntityCollisionEvent event){
-        Vehicle vehicle = event.getVehicle();
-        if (plugin.getSettingsManager().isBlacklistedWorld(vehicle.getLocation().getWorld())) {
+        if (plugin.getSettingsManager().isBlacklistedWorld(event.getVehicle().getLocation().getWorld())) {
             return;
         }
 
         if(event.getEntity() instanceof Player){
-            Field field = plugin.getForceFieldManager().getEnabledSourceField(vehicle.getLocation(), FieldFlag.PREVENT_VEHICLE_MOVE);
+            Field field = plugin.getForceFieldManager().getEnabledSourceField(event.getVehicle().getLocation(), FieldFlag.PREVENT_VEHICLE_PUSH);
             Player player = (Player) event.getEntity();
             if(field != null){
-                if(FieldFlag.PREVENT_VEHICLE_MOVE.applies(field, player)){
+                if(FieldFlag.PREVENT_VEHICLE_PUSH.applies(field, player)){
                     event.setCancelled(true);
                     event.setCollisionCancelled(true);
                 }

@@ -21,7 +21,7 @@ public enum FieldFlag {
     PREVENT_USE_DOORS,
     PREVENT_USE_REDSTONE,
     PREVENT_VEHICLE_DESTROY,
-    PREVENT_VEHICLE_MOVE,
+    PREVENT_VEHICLE_PUSH,
     PREVENT_VEHICLE_CREATE,
     PREVENT_ENDERMAN_DESTROY,
     PREVENT_EXPLOSIONS,
@@ -228,7 +228,7 @@ public enum FieldFlag {
                     FieldFlag.NO_PLAYER_SPRINT,
                     FieldFlag.PREVENT_VEHICLE_ENTER,
                     FieldFlag.PREVENT_VEHICLE_EXIT,
-                    FieldFlag.PREVENT_VEHICLE_MOVE,
+                    FieldFlag.PREVENT_VEHICLE_PUSH,
                     FieldFlag.COMMAND_BLACKLIST,
                     FieldFlag.NO_RESIZE
             };
