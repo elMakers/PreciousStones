@@ -466,7 +466,7 @@ public class PSPlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		Entity entity = event.getRightClicked();
 
-		if (entity.getType().equals(EntityType.ITEM_FRAME)) {
+		if (entity.getType().equals(EntityType.ITEM_FRAME) || entity.getType().equals(EntityType.GLOW_ITEM_FRAME)) {
 			if (!plugin.getPermissionsManager().has(player, "preciousstones.bypass.item-frame-take")) {
 				Field field = plugin.getForceFieldManager().getEnabledSourceField(entity.getLocation(), FieldFlag.PREVENT_ITEM_FRAME_TAKE);
 
