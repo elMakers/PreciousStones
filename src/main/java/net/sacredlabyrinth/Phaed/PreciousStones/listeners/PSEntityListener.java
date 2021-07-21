@@ -457,7 +457,7 @@ public class PSEntityListener implements Listener {
             return;
         }
 
-        if (event.getEntity().getType().equals(EntityType.ITEM_FRAME)) {
+        if (event.getEntity().getType().equals(EntityType.ITEM_FRAME) || event.getEntity().getType().equals(EntityType.GLOW_ITEM_FRAME)) {
             Player player = Helper.getDamagingPlayer(event);
 
             if (player != null && !plugin.getPermissionsManager().has(player, "preciousstones.bypass.item-frame-take")) {
